@@ -21,8 +21,14 @@ export default function NavbarLinks() {
   const locale = useAppSelector((state) => state.language.locale);
   const dictionary = locale === Language.AR ? arDict : enDict;
 
+  const isRTL = locale === Language.AR;
+
   return (
-    <ul className="hidden lg:flex items-center gap-1">
+    <ul
+      className={`hidden lg:flex items-center gap-1 ${
+        isRTL ? "flex-row-reverse" : "flex-row"
+      }`}
+    >
       {navLinks.map((link) => (
         <NavbarLinkItem
           key={link.key}

@@ -1,0 +1,197 @@
+src/
+├── app/
+│   ├── auth/
+│   │   ├── sign-in/
+│   │   │   └── SignInPage.tsx           # صفحة تسجيل الدخول
+│   │   ├── sign-up/
+│   │   │   └── SignUpPage.tsx           # صفحة تسجيل مستخدم جديد
+│   │   └── forgot-password/
+│   │       └── ForgotPasswordPage.tsx  # صفحة استعادة كلمة المرور
+│   │
+│   ├── home/
+│   │   └── HomePage.tsx
+│   │       ├── HeroSection/             # القسم الرئيسي للمقدمة
+│   │       ├── CategoriesSection/       # عرض فئات المنتجات
+│   │       ├── FeaturedProductsSection/ # منتجات مميزة
+│   │       ├── DealsSection/            # العروض والتخفيضات
+│   │       └── NewsletterSection/       # الاشتراك في النشرة البريدية
+│   │
+│   ├── products/
+│   │   ├── ProductsPage.tsx             # صفحة جميع المنتجات
+│   │   └── product/[slug]/              # صفحة منتج فردي ديناميكي
+│   │        └── ProductPage.tsx
+│   │
+│   ├── cart/
+│   │   └── CartPage.tsx                 # صفحة سلة التسوق
+│   │
+│   ├── favorites/
+│   │   └── FavoritesPage.tsx            # صفحة المفضلة
+│   │
+│   ├── compare/
+│   │   └── ComparePage.tsx              # صفحة مقارنة المنتجات
+│   │
+│   ├── accessories/
+│   │   └── AccessoriesPage.tsx          # صفحة الإكسسوارات
+│   │
+│   ├── careers/
+│   │   └── CareersPage.tsx              # صفحة الوظائف
+│   │
+│   ├── contact-us/
+│   │   └── ContactPage.tsx              # صفحة الاتصال
+│   │
+│   └── dashboard/
+│       └── DashboardLayout.tsx          # التخطيط العام للداشبورد
+│            ├── Sidebar.tsx
+│            │    ├── DashboardLink.tsx
+│            │    ├── ProductsLink.tsx
+│            │    ├── InventoryLink.tsx
+│            │    ├── UsersLink.tsx
+│            │    └── EmployeesLink.tsx
+│            ├── Header.tsx
+│            │    ├── UserMenu.tsx
+│            │    └── Notifications.tsx
+│            └── ContentArea.tsx
+│                ├── AnalyticsPage/
+│                │    ├── AnalyticsWidget.tsx
+│                │    └── SalesChart.tsx
+│                ├── ProductsPage/
+│                │    ├── ProductTable.tsx
+│                │    └── ProductRow.tsx
+│                ├── AddProductPage/
+│                │    ├── AddProductForm.tsx
+│                │    │    ├── ProductTitleInput.tsx
+│                │    │    ├── ProductDescriptionInput.tsx
+│                │    │    ├── ProductPriceInput.tsx
+│                │    │    ├── ProductCategorySelect.tsx
+│                │    │    ├── ProductSpecsInputs.tsx
+│                │    │    ├── ProductImagesUploader.tsx
+│                │    │    └── SubmitButton.tsx
+│                ├── InventoryPage/
+│                │    ├── InventoryTable.tsx
+│                │    └── InventoryRow.tsx
+│                ├── UsersPage/
+│                │    ├── UsersTable.tsx
+│                │    └── UserRow.tsx
+│                └── EmployeesPage/
+│                     ├── EmployeesTable.tsx
+│                     └── EmployeeRow.tsx
+│
+├── components/
+│   ├── ui/                           # shadcn/ui base components
+│   ├── buttons/
+│   │    ├── PrimaryButton.tsx
+│   │    ├── SecondaryButton.tsx
+│   │    └── IconButton.tsx
+│   ├── forms/
+│   │    ├── InputField.tsx
+│   │    ├── Textarea.tsx
+│   │    └── SelectDropdown.tsx
+│   ├── cards/
+│   │    ├── ProductCard.tsx
+│   │    ├── DealCard.tsx
+│   │    ├── CategoryCard.tsx
+│   │    └── AccessoryCard.tsx
+│   ├── Navbar/                       # Navbar + mobile + UI/Logic split
+│   │    ├── Navbar.tsx
+│   │    ├── NavbarUI.tsx
+│   │    ├── NavbarLogic.tsx
+│   │    ├── NavbarLinks.tsx
+│   │    ├── NavbarMobileMenu.tsx
+│   │    ├── ThemeToggleButton.tsx
+│   │    └── LanguageToggleButton.tsx
+│   └── theme/
+│        ├── ThemeProvider.tsx
+│        └── LanguageProvider.tsx
+│
+├── redux/
+│   ├── store.ts
+│   └── slices/
+│        ├── authSlice.ts
+│        ├── cartSlice.ts
+│        ├── favoritesSlice.ts
+│        ├── compareSlice.ts
+│        ├── productsSlice.ts
+│        ├── uiSlice.ts
+│        ├── languageSlice.ts          # Redux Toolkit slice للغة
+│        └── themeSlice.ts             # Redux Toolkit slice للثيم
+│
+├── lib/
+│   ├── api-client.ts
+│   ├── auth.ts
+│   └── permissions.ts
+│
+├── services/
+│   ├── auth.service.ts
+│   ├── product.service.ts
+│   ├── order.service.ts
+│   └── cloudinary.service.ts
+│
+├── hooks/
+│   └── useTranslation.ts
+│
+├── types/
+│   ├── product.ts
+│   ├── user.ts
+│   ├── order.ts
+│   └── review.ts
+│
+├── enums/
+│   ├── roles.ts
+│   ├── orderStatus.ts
+│   ├── productCategory.ts
+│   ├── paymentMethod.ts
+│   └── pages.ts                     # Enum لجميع الصفحات + dynamic locale
+│
+└── dict/
+    ├── common/
+    │    └── navbar/
+    │         ├── navbar.en.ts
+    │         └── navbar.ar.ts
+    ├── Home/
+    │    ├── home.en.ts
+    │    └── home.ar.ts
+    ├── Products/
+    │    ├── products.en.ts
+    │    └── products.ar.ts
+    ├── Product/
+    │    ├── product.en.ts
+    │    └── product.ar.ts
+    ├── Cart/
+    │    ├── cart.en.ts
+    │    └── cart.ar.ts
+    ├── Favorites/
+    │    ├── favorites.en.ts
+    │    └── favorites.ar.ts
+    ├── Compare/
+    │    ├── compare.en.ts
+    │    └── compare.ar.ts
+    ├── Accessories/
+    │    ├── accessories.en.ts
+    │    └── accessories.ar.ts
+    ├── Careers/
+    │    ├── careers.en.ts
+    │    └── careers.ar.ts
+    ├── ContactUs/
+    │    ├── contact.en.ts
+    │    └── contact.ar.ts
+    └── Dashboard/
+         ├── dashboard.en.ts
+         ├── dashboard.ar.ts
+         ├── AnalyticsPage/
+         │    ├── analytics.en.ts
+         │    └── analytics.ar.ts
+         ├── ProductsPage/
+         │    ├── products.en.ts
+         │    └── products.ar.ts
+         ├── AddProductPage/
+         │    ├── addProduct.en.ts
+         │    └── addProduct.ar.ts
+         ├── InventoryPage/
+         │    ├── inventory.en.ts
+         │    └── inventory.ar.ts
+         ├── UsersPage/
+         │    ├── users.en.ts
+         │    └── users.ar.ts
+         └── EmployeesPage/
+              ├── employees.en.ts
+              └── employees.ar.ts

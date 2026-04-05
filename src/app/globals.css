@@ -151,6 +151,17 @@ body {
   direction: rtl;
 }
 
+/* RTL Body Styles */
+body.rtl {
+  direction: rtl;
+}
+
+/* RTL Logical Properties */
+body.rtl .featured-products-swiper {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}
+
 /* Custom Navigation Buttons */
 .swiper-button-next-custom,
 .swiper-button-prev-custom {
@@ -180,40 +191,44 @@ body {
 
 /* LTR Navigation */
 .ltr-nav-next {
-  right: -50px;
+  inset-inline-end: -50px;
+  inset-inline-start: auto;
 }
 
 .ltr-nav-prev {
-  left: -50px;
+  inset-inline-start: -50px;
+  inset-inline-end: auto;
 }
 
 .ltr-nav-next::after {
   transform: rotate(45deg);
-  margin-left: -2px;
+  margin-inline-start: -2px;
 }
 
 .ltr-nav-prev::after {
   transform: rotate(-135deg);
-  margin-right: -2px;
+  margin-inline-end: -2px;
 }
 
 /* RTL Navigation */
 .rtl-nav-next {
-  left: -50px;
+  inset-inline-start: -50px;
+  inset-inline-end: auto;
 }
 
 .rtl-nav-prev {
-  right: -50px;
+  inset-inline-end: -50px;
+  inset-inline-start: auto;
 }
 
 .rtl-nav-next::after {
   transform: rotate(-135deg);
-  margin-right: -2px;
+  margin-inline-end: -2px;
 }
 
 .rtl-nav-prev::after {
   transform: rotate(45deg);
-  margin-left: -2px;
+  margin-inline-start: -2px;
 }
 
 /* Hover effects */
@@ -224,10 +239,11 @@ body {
 }
 
 /* Custom Pagination */
-.swiper-pagination-custom {
+.featured-products-swiper .swiper-pagination {
   position: absolute;
   bottom: -40px !important;
-  left: 50% !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
   transform: translateX(-50%) !important;
   width: auto !important;
   display: flex !important;
@@ -235,7 +251,7 @@ body {
   z-index: 10 !important;
 }
 
-.swiper-pagination-custom .swiper-pagination-bullet {
+.featured-products-swiper .swiper-pagination-bullet {
   width: 10px !important;
   height: 10px !important;
   background: #d1d5db !important;
@@ -244,12 +260,12 @@ body {
   transition: all 0.3s ease !important;
 }
 
-.swiper-pagination-custom .swiper-pagination-bullet-active {
+.featured-products-swiper .swiper-pagination-bullet-active {
   background: #3D9BD6 !important;
   transform: scale(1.2) !important;
 }
 
-.swiper-pagination-custom .swiper-pagination-bullet:hover {
+.featured-products-swiper .swiper-pagination-bullet:hover {
   background: #6b7280 !important;
 }
 

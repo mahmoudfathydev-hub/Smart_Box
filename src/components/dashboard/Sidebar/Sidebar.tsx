@@ -13,26 +13,16 @@ export default function Sidebar({
     <aside
       className={`
         bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700
-        transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-16" : "w-64"}
+        transition-all duration-300 ease-in-out overflow-x-hidden
+        ${isCollapsed ? "w-[50px]" : "w-64"}
       `}
     >
-      {/* Header */}
       <SidebarHeader
         isCollapsed={isCollapsed}
         onToggle={onToggle || (() => {})}
       />
-
-      {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <MainNavigation />
-      </div>
-
-      {/* Footer */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="text-xs text-gray-500 dark:text-gray-400">
-          {isCollapsed ? "© SB" : "© SmartBox Dashboard"}
-        </div>
+      <div className="flex-1 overflow-x-hidden p-2">
+        <MainNavigation isCollapsed={isCollapsed} />
       </div>
     </aside>
   );

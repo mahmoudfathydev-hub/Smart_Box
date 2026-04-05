@@ -3,6 +3,7 @@ export interface SidebarLinkProps {
   icon: React.ReactNode;
   label: string;
   isActive?: boolean;
+  isCollapsed?: boolean;
 }
 
 export interface SidebarSectionProps {

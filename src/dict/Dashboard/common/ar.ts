@@ -1,5 +1,5 @@
 export const sidebarDictionary = {
-  dashboard: "لوحة التحكم",
+  dashboard: "مركز التحكم",
   analytics: "التحليلات",
   products: "المنتجات",
   addProduct: "إضافة منتج",

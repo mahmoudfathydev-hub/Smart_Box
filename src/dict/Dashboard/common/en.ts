@@ -1,5 +1,5 @@
 export const sidebarDictionary = {
-  dashboard: "Dashboard",
+  dashboard: "Control Center",
   analytics: "Analytics",
   products: "Products",
   addProduct: "Add Product",

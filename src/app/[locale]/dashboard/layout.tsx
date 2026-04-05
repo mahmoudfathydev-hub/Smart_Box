@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import React from "react";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+    const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -49,12 +50,11 @@ export default function DashboardLayout({
       </div>
     );
   }
-
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="flex  bg-gray-50 dark:bg-gray-950 overflow-hidden">
       <Sidebar isCollapsed={isCollapsed} onToggle={() => { if (!isMobile) { setIsCollapsed(!isCollapsed); } }} />
-      <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto">{children}</main>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <main className="flex-1 overflow-y-hidden min-h-screen">{children}</main>
       </div>
     </div>
   );

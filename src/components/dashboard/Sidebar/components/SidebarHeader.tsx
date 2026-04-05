@@ -52,9 +52,6 @@ export default function SidebarHeader({
       className={`flex items-center justify-between ${isCollapsed ? "p-2" : "p-4"} border-b border-gray-200 dark:border-gray-700`}
     >
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-xs">SB</span>
-        </div>
         {!isCollapsed && (
           <span className="font-semibold text-gray-900 dark:text-white">
             {dictionary.dashboard || "Control Center"}

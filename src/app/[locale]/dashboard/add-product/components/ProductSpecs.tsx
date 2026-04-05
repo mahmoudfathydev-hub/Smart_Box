@@ -14,31 +14,26 @@ export default function ProductSpecs({ dict }: { dict: any }) {
   const dispatch = useAppDispatch();
   const product = useAppSelector(selectProduct);
   const [newKey, setNewKey] = useState("");
-  const [lang, setLang] = useState<"en" | "ar">("en");
 
   const addSpec = () => {
     if (newKey) {
-      dispatch(updateSpecs({ lang, key: newKey, value: "" }));
+      dispatch(updateSpecs({ key: newKey, value: "" }));
       setNewKey("");
     }
   };
 
-  const handleSpecChange = (lang: "en" | "ar", key: string, value: string) => {
-    dispatch(updateSpecs({ lang, key, value }));
+  const handleSpecChange = (key: string, value: string) => {
+    dispatch(updateSpecs({ key, value }));
   };
 
-  const handleDelete = (lang: "en" | "ar", key: string) => {
-    dispatch(removeSpec({ lang, key }));
+  const handleDelete = (key: string) => {
+    dispatch(removeSpec({ key }));
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{dict.specifications}</CardTitle>
-        <div className="flex gap-2">
-           <Button variant={lang === "en" ? "default" : "outline"} size="sm" onClick={() => setLang("en")}>EN</Button>
-           <Button variant={lang === "ar" ? "default" : "outline"} size="sm" onClick={() => setLang("ar")}>AR</Button>
-        </div>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="flex gap-2">
@@ -53,17 +48,16 @@ export default function ProductSpecs({ dict }: { dict: any }) {
         </div>
         
         <div className="space-y-4">
-          {Object.entries(lang === "en" ? product.specs_en : product.specs_ar).map(([key, value]) => (
+          {Object.entries(product.specs_en).map(([key, value]) => (
             <div key={key} className="flex gap-2 items-center">
               <Label className="w-1/4 truncate">{key}</Label>
               <Input
                 value={value as string}
-                onChange={(e) => handleSpecChange(lang, key, e.target.value)}
+                onChange={(e) => handleSpecChange(key, e.target.value)}
                 placeholder="Value"
                 className="flex-1"
-                dir={lang === "ar" ? "rtl" : "ltr"}
               />
-              <Button variant="ghost" size="icon" onClick={() => handleDelete(lang, key)}>
+              <Button variant="ghost" size="icon" onClick={() => handleDelete(key)}>
                 <Trash2 className="w-4 h-4 text-destructive" />
               </Button>
             </div>

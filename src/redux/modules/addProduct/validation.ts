@@ -16,7 +16,6 @@ export const productSchema = z.object({
   images_url: z.array(z.string()).min(1, "At least one image is required").max(4, "Maximum 4 images allowed"),
   is_active: z.boolean().default(true),
   specs_en: z.record(z.string(), z.string()).optional(),
-  specs_ar: z.record(z.string(), z.string()).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;

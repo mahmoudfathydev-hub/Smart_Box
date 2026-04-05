@@ -6,6 +6,7 @@ import { Language } from "@/enums/language.enum";
 import { sidebarDictionary as enDict } from "@/dict/Dashboard/common/en";
 import { sidebarDictionary as arDict } from "@/dict/Dashboard/common/ar";
 import { Package, Search, Filter, Plus, Edit, Trash2, Eye } from "lucide-react";
+import Link from "next/link";
 
 export default function ProductsPage() {
   const locale = useAppSelector((state) => state.language.locale);
@@ -83,10 +84,12 @@ export default function ProductsPage() {
           <Filter className="w-4 h-4" />
           Filter
         </button>
-        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">
-          <Plus className="w-4 h-4" />
-          {dictionary.addProduct}
-        </button>
+        <Link href={`/${locale}/dashboard/add-product`}>
+          <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg w-full h-full">
+            <Plus className="w-4 h-4" />
+            {dictionary.addProduct}
+          </button>
+        </Link>
       </div>
 
       {/* Products Table */}

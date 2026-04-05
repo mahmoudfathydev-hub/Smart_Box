@@ -19,7 +19,6 @@ export interface Product {
   sku: string;
   images_url: string[];
   specs_en: ProductSpecs;
-  specs_ar: ProductSpecs;
   is_active: boolean;
 }
 

@@ -17,7 +17,6 @@ const initialProduct: Product = {
   sku: "",
   images_url: [],
   specs_en: {},
-  specs_ar: {},
   is_active: true,
 };
 
@@ -48,25 +47,14 @@ const addProductSlice = createSlice({
     },
     updateSpecs: (
       state,
-      action: PayloadAction<{ lang: "en" | "ar"; key: string; value: string }>,
+      action: PayloadAction<{ key: string; value: string }>,
     ) => {
-      const { lang, key, value } = action.payload;
-      if (lang === "en") {
-        state.product.specs_en[key] = value;
-      } else {
-        state.product.specs_ar[key] = value;
-      }
+      const { key, value } = action.payload;
+      state.product.specs_en[key] = value;
     },
-    removeSpec: (
-      state,
-      action: PayloadAction<{ lang: "en" | "ar"; key: string }>,
-    ) => {
-      const { lang, key } = action.payload;
-      if (lang === "en") {
-        delete state.product.specs_en[key];
-      } else {
-        delete state.product.specs_ar[key];
-      }
+    removeSpec: (state, action: PayloadAction<{ key: string }>) => {
+      const { key } = action.payload;
+      delete state.product.specs_en[key];
     },
     resetForm: (state) => {
       state.product = initialProduct;

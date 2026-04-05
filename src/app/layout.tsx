@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "SmartBox - Your Smart Shopping Destination",
 };
 
+import ConditionalLayout from "@/components/providers/ConditionalLayout";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,9 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
           <DirectionProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <ConditionalLayout>{children}</ConditionalLayout>
           </DirectionProvider>
         </ReduxProvider>
       </body>

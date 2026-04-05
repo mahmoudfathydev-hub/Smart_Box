@@ -156,11 +156,9 @@ export default function Footer() {
                     {dictionary.contact.address}
                   </span>
                 </div>
-                <div
-                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
-                >
+                <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-600 dark:text-gray-400 font-sans" dir="ltr">
                     {dictionary.contact.phone}
                   </span>
                 </div>

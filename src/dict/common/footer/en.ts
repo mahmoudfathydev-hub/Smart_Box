@@ -59,10 +59,10 @@ export const footerDictionary = {
   // Contact Info
   contact: {
     title: "Get in Touch",
-    address: "123 Smart Street, Tech City, TC 12345",
-    phone: "+1 (555) 123-4567",
+    address: "Kafr ElDawwar, AlBehira Governorate",
+    phone: "+20 120 048 1281",
     email: "support@smartbox.com",
-    hours: "Mon-Fri: 9AM-6PM, Sat: 10AM-4PM"
+    hours: "sun-thu: 9AM-6PM, fri: 10AM-4PM"
   },
   
   // Social Media
@@ -103,6 +103,6 @@ export const footerDictionary = {
   // Copyright
   copyright: {
     text: "© 2026 SmartBox. All rights reserved.",
-    madeWith: "Made with ❤️ for smart shoppers"
+    madeWith: "Made with ❤️ By Mahmoud Fathy"
   }
 };

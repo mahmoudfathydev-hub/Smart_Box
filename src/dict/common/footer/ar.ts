@@ -59,10 +59,10 @@ export const footerDictionary = {
   // Contact Info
   contact: {
     title: "تواصل معنا",
-    address: "123 شارع الذكي، مدينة التقنية، TC 12345",
-    phone: "+966 50 123 4567",
-    email: "support@smartbox.com",
-    hours: "الأحد-الخميس: 9ص-6م، الجمعة: 10ص-4م"
+    address: "كفر الدوار، محافظة البحيرة",
+    phone: "+20 120 048 1281",
+    email: "mahmoudfathy.dev@gmail.com",
+    hours: "الأحد-الخميس: 9ص-6م، السبت: 10ص-4م"
   },
   
   // Social Media
@@ -102,7 +102,7 @@ export const footerDictionary = {
   
   // Copyright
   copyright: {
-    text: "© 2026 سمارت بوكس. جميع الحقوق محفوظة.",
-    madeWith: "صُنع بـ ❤️ للمتسوقين الأذكياء"
+    text: "© 2026 SmartBox. جميع الحقوق محفوظة.",
+    madeWith: "صُنع بـ ❤️ بواسطة محمود فتحي"
   }
 };

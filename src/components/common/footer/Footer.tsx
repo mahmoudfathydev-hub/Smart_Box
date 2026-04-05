@@ -39,12 +39,10 @@ export default function Footer() {
   }) => (
     <a
       href={href}
-      className={`text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center gap-1 ${
-        isRTL ? "flex-row-reverse" : ""
-      }`}
+      className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center gap-1"
     >
       {children}
-      <ChevronRight className="w-3 h-3" />
+      <ChevronRight className="w-3 h-3 rtl:rotate-180" />
     </a>
   );
 
@@ -98,34 +96,17 @@ export default function Footer() {
   );
 
   return (
-    <footer
-      dir={isRTL ? "rtl" : "ltr"}
-      className={`bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 ${
-        isRTL ? "text-right" : "text-left"
-      }`}
-    >
+    <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-start">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className={`py-12`}>
-          <div
-            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8 ${
-              isRTL ? "xl:grid-flow-col-dense" : ""
-            }`}
-          >
+        <div className="py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8">
             {/* About Section */}
             <div className="lg:col-span-2">
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.about.title}
               </h3>
-              <p
-                className={`text-gray-600 dark:text-gray-400 mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {dictionary.about.description}
               </p>
               <FooterLink href="/about">{dictionary.about.link}</FooterLink>
@@ -133,14 +114,10 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.quickLinks.title}
               </h3>
-              <ul className={`space-y-2 ${isRTL ? "text-right" : "text-left"}`}>
+              <ul className="space-y-2">
                 {Object.entries(dictionary.quickLinks.links).map(
                   ([key, value]) => (
                     <li key={key}>
@@ -153,14 +130,10 @@ export default function Footer() {
 
             {/* Customer Service */}
             <div>
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.customerService.title}
               </h3>
-              <ul className={`space-y-2 ${isRTL ? "text-right" : "text-left"}`}>
+              <ul className="space-y-2">
                 {Object.entries(dictionary.customerService.links).map(
                   ([key, value]) => (
                     <li key={key}>
@@ -173,19 +146,11 @@ export default function Footer() {
 
             {/* Contact Info */}
             <div className="lg:col-span-2">
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.contact.title}
               </h3>
-              <div
-                className={`space-y-3 ${isRTL ? "text-right" : "text-left"}`}
-              >
-                <div
-                  className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
-                >
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-gray-400 mt-1 flex-shrink-0" />
                   <span className="text-gray-600 dark:text-gray-400">
                     {dictionary.contact.address}
@@ -199,17 +164,13 @@ export default function Footer() {
                     {dictionary.contact.phone}
                   </span>
                 </div>
-                <div
-                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
-                >
+                <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-600 dark:text-gray-400">
                     {dictionary.contact.email}
                   </span>
                 </div>
-                <div
-                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
-                >
+                <div className="flex items-center gap-3">
                   <Clock className="w-5 h-5 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-600 dark:text-gray-400">
                     {dictionary.contact.hours}
@@ -220,41 +181,25 @@ export default function Footer() {
           </div>
 
           {/* Second Row - Newsletter, Social, App */}
-          <div
-            className={`grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 ${
-              isRTL ? "lg:grid-flow-col-dense" : ""
-            }`}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
             {/* Newsletter */}
             <div>
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.newsletter.title}
               </h3>
-              <p
-                className={`text-gray-600 dark:text-gray-400 mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {dictionary.newsletter.description}
               </p>
               <form
                 onSubmit={handleNewsletterSubmit}
-                className={`flex flex-col sm:flex-row gap-2 ${
-                  isRTL ? "sm:flex-row-reverse" : ""
-                }`}
+                className="flex flex-col sm:flex-row gap-2"
               >
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={dictionary.newsletter.placeholder}
-                  className={`flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    isRTL ? "text-right" : "text-left"
-                  }`}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   required
                 />
                 <button
@@ -264,25 +209,17 @@ export default function Footer() {
                   {dictionary.newsletter.button}
                 </button>
               </form>
-              <p
-                className={`text-sm text-gray-500 dark:text-gray-400 mt-2 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 {dictionary.newsletter.privacyNote}
               </p>
             </div>
 
             {/* Social Media */}
             <div>
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.social.title}
               </h3>
-              <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <div className="flex gap-3">
                 <SocialIcon platform="facebook" />
                 <SocialIcon platform="twitter" />
                 <SocialIcon platform="instagram" />
@@ -293,31 +230,23 @@ export default function Footer() {
 
             {/* App Download */}
             <div>
-              <h3
-                className={`text-lg font-semibold text-gray-900 dark:text-white mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {dictionary.app.title}
               </h3>
-              <p
-                className={`text-gray-600 dark:text-gray-400 mb-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
-              >
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {dictionary.app.description}
               </p>
-              <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+              <div className="flex gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg transition-colors duration-200">
                   <Apple className="w-5 h-5" />
-                  <div className="text-left">
+                  <div className="text-start">
                     <div className="text-xs">Download on</div>
                     <div className="text-sm font-semibold">App Store</div>
                   </div>
                 </button>
                 <button className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg transition-colors duration-200">
                   <Smartphone className="w-5 h-5" />
-                  <div className="text-left">
+                  <div className="text-start">
                     <div className="text-xs">Get it on</div>
                     <div className="text-sm font-semibold">Google Play</div>
                   </div>
@@ -328,30 +257,16 @@ export default function Footer() {
 
           {/* Payment Methods */}
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <div
-              className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${
-                isRTL ? "sm:flex-row-reverse" : ""
-              }`}
-            >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h3
-                  className={`text-lg font-semibold text-gray-900 dark:text-white mb-2 ${
-                    isRTL ? "text-right" : "text-left"
-                  }`}
-                >
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   {dictionary.payment.title}
                 </h3>
-                <p
-                  className={`text-gray-600 dark:text-gray-400 ${
-                    isRTL ? "text-right" : "text-left"
-                  }`}
-                >
+                <p className="text-gray-600 dark:text-gray-400">
                   {dictionary.payment.description}
                 </p>
               </div>
-              <div
-                className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
-              >
+              <div className="flex items-center gap-2">
                 <CreditCard className="w-8 h-8 text-gray-400" />
                 <div className="flex gap-2">
                   {/* Payment method icons would go here */}
@@ -372,19 +287,11 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="py-6 border-t border-gray-200 dark:border-gray-700">
-          <div
-            className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${
-              isRTL ? "sm:flex-row-reverse" : ""
-            }`}
-          >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               {dictionary.copyright.text}
             </p>
-            <p
-              className={`text-gray-600 dark:text-gray-400 text-sm flex items-center gap-1 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
-            >
+            <p className="text-gray-600 dark:text-gray-400 text-sm flex items-center gap-1">
               {dictionary.copyright.madeWith}
               <Heart className="w-4 h-4 text-red-500" />
             </p>

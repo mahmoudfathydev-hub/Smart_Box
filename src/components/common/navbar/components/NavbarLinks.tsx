@@ -24,11 +24,7 @@ export default function NavbarLinks() {
   const isRTL = locale === Language.AR;
 
   return (
-    <ul
-      className={`hidden lg:flex items-center gap-1 ${
-        isRTL ? "flex-row-reverse" : "flex-row"
-      }`}
-    >
+    <ul className="hidden lg:flex items-center gap-1">
       {navLinks.map((link) => (
         <NavbarLinkItem
           key={link.key}

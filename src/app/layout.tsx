@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 import DirectionProvider from "@/components/providers/DirectionProvider";
 import Navbar from "@/components/common/navbar/navbar";
+import Footer from "@/components/common/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <DirectionProvider>
             <Navbar />
             {children}
+            <Footer />
           </DirectionProvider>
         </ReduxProvider>
       </body>

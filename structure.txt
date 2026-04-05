@@ -14,7 +14,6 @@ src/
 │   │       ├── CategoriesSection/       # عرض فئات المنتجات
 │   │       ├── FeaturedProductsSection/ # منتجات مميزة
 │   │       ├── DealsSection/            # العروض والتخفيضات
-│   │       └── NewsletterSection/       # الاشتراك في النشرة البريدية
 │   │
 │   ├── products/
 │   │   ├── ProductsPage.tsx             # صفحة جميع المنتجات

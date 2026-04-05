@@ -156,6 +156,17 @@ body.rtl {
   direction: rtl;
 }
 
+/* RTL Footer Styles */
+[dir="rtl"] footer,
+.rtl footer {
+  direction: rtl;
+}
+
+[dir="rtl"] footer .grid,
+.rtl footer .grid {
+  direction: rtl;
+}
+
 /* RTL Logical Properties */
 body.rtl .featured-products-swiper {
   margin-inline-start: auto;

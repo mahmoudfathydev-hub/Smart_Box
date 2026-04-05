@@ -1,7 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -12,7 +12,7 @@ import { featuredProductsDictionary as enDict } from "@/dict/Home/FeaturedProduc
 import { featuredProductsDictionary as arDict } from "@/dict/Home/FeaturedProducts/ar";
 
 import { Swiper as SwiperCore } from "swiper";
-SwiperCore.use([Navigation, Pagination, Autoplay]);
+SwiperCore.use([Navigation, Pagination]);
 
 export default function FeaturedProductsGrid() {
   const locale = useAppSelector((state) => state.language.locale);
@@ -22,18 +22,15 @@ export default function FeaturedProductsGrid() {
   return (
     <div className="relative">
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[Navigation, Pagination]}
         spaceBetween={30}
         slidesPerView={1}
         slidesPerGroup={1}
         loop={true}
-        autoplay={{
-          delay: 4500,
-          disableOnInteraction: false,
-        }}
         pagination={{
           clickable: true,
           dynamicBullets: true,
+          el: ".swiper-pagination-custom",
         }}
         navigation={{
           nextEl: ".swiper-button-next-custom",
@@ -71,6 +68,7 @@ export default function FeaturedProductsGrid() {
       <div
         className={`swiper-button-prev-custom ${isRTL ? "rtl-nav-prev" : "ltr-nav-prev"}`}
       ></div>
+      <div className="swiper-pagination-custom"></div>
     </div>
   );
 }

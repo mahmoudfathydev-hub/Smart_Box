@@ -180,11 +180,11 @@ body {
 
 /* LTR Navigation */
 .ltr-nav-next {
-  right: 22px;
+  right: -50px;
 }
 
 .ltr-nav-prev {
-  left: 22px;
+  left: -50px;
 }
 
 .ltr-nav-next::after {
@@ -199,11 +199,11 @@ body {
 
 /* RTL Navigation */
 .rtl-nav-next {
-  left: 22px;
+  left: -50px;
 }
 
 .rtl-nav-prev {
-  right: 22px;
+  right: -50px;
 }
 
 .rtl-nav-next::after {
@@ -221,6 +221,36 @@ body {
 .swiper-button-prev-custom:hover {
   background: #1B3664;
   transform: translateY(-50%) scale(1.1);
+}
+
+/* Custom Pagination */
+.swiper-pagination-custom {
+  position: absolute;
+  bottom: -40px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  display: flex !important;
+  gap: 8px !important;
+  z-index: 10 !important;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  background: #d1d5db !important;
+  opacity: 1 !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet-active {
+  background: #3D9BD6 !important;
+  transform: scale(1.2) !important;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet:hover {
+  background: #6b7280 !important;
 }
 
 .rtl-swiper .swiper-pagination,

@@ -13,7 +13,6 @@ export default function FeaturedProductsSection() {
   return (
     <section className="w-full py-16 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             {dictionary.title}
@@ -23,7 +22,6 @@ export default function FeaturedProductsSection() {
           </p>
         </div>
 
-        {/* Swiper Container */}
         <FeaturedProductsGrid />
       </div>
     </section>

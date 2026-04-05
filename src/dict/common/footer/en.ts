@@ -61,7 +61,7 @@ export const footerDictionary = {
     title: "Get in Touch",
     address: "Kafr ElDawwar, AlBehira Governorate",
     phone: "+20 120 048 1281",
-    email: "support@smartbox.com",
+    email: "mahmoudfathy.dev@gmail.com",
     hours: "sun-thu: 9AM-6PM, fri: 10AM-4PM"
   },
   

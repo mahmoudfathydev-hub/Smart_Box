@@ -1,4 +1,5 @@
 import HeroSection from "./components/HeroSection/HeroSection";
+import CategoriesSection from "./components/CategoriesSection/CategoriesSection";
 
 interface LocalePageProps {
   params: Promise<{ locale: string }>;
@@ -8,8 +9,9 @@ export default async function LocalePage({ params }: LocalePageProps) {
   const { locale } = await params;
 
   return (
-    <main className="flex flex-1 items-center justify-center bg-background text-foreground">
+    <main >
       <HeroSection />
+      <CategoriesSection />
     </main>
   );
 }

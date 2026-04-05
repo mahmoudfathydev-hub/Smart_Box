@@ -5,5 +5,5 @@ export const heroDictionary = {
     part2: "WORK HARDER.",
   },
   description:
-    "The all-new Kinetic Pro series. Engineered with 4nm architecture for the builders, the creators, and the visionaries."
+   "Smart Box — a premium e-commerce destination delivering a refined shopping experience powered by innovation, trusted quality, seamless performance, and thoughtfully curated products for modern lifestyles."
 };

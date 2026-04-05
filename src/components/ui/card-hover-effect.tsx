@@ -16,6 +16,11 @@ export const HoverEffect = ({
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  function isArabicText(text: string): boolean {
+    const arabicRegex = /[\u0600-\u06FF]/;
+    return arabicRegex.test(text);
+  }
+
   return (
     <div
       className={cn(
@@ -30,6 +35,7 @@ export const HoverEffect = ({
           className="relative group  block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
+          dir={isArabicText(item.title) ? "rtl" : "ltr"}
         >
           <AnimatePresence>
             {hoveredIndex === idx && (
@@ -48,10 +54,12 @@ export const HoverEffect = ({
               />
             )}
           </AnimatePresence>
-          <Card>
+          <Card isRTL={isArabicText(item.title)}>
             {item.icon && <CardIcon>{item.icon}</CardIcon>}
-            <CardTitle>{item.title}</CardTitle>
-            <CardDescription>{item.description}</CardDescription>
+            <CardTitle isRTL={isArabicText(item.title)}>{item.title}</CardTitle>
+            <CardDescription isRTL={isArabicText(item.title)}>
+              {item.description}
+            </CardDescription>
           </Card>
         </a>
       ))}
@@ -62,9 +70,11 @@ export const HoverEffect = ({
 export const Card = ({
   className,
   children,
+  isRTL = false,
 }: {
   className?: string;
   children: React.ReactNode;
+  isRTL?: boolean;
 }) => {
   return (
     <div
@@ -72,6 +82,7 @@ export const Card = ({
         "rounded-2xl h-full w-full p-6 overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-[#3D9BD6] dark:hover:border-[#3D9BD6] group-hover:shadow-xl group-hover:shadow-[#3D9BD6]/10 group-hover:-translate-y-1 transition-all duration-300 relative z-20",
         className,
       )}
+      dir={isRTL ? "rtl" : "ltr"}
     >
       <div className="relative z-50">
         <div className="space-y-4">{children}</div>
@@ -102,14 +113,17 @@ export const CardIcon = ({
 export const CardTitle = ({
   className,
   children,
+  isRTL = false,
 }: {
   className?: string;
   children: React.ReactNode;
+  isRTL?: boolean;
 }) => {
   return (
     <h4
       className={cn(
         "text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[#3D9BD6] dark:group-hover:text-[#3D9BD6] transition-colors duration-300",
+        isRTL ? "text-right" : "text-left",
         className,
       )}
     >
@@ -121,14 +135,17 @@ export const CardTitle = ({
 export const CardDescription = ({
   className,
   children,
+  isRTL = false,
 }: {
   className?: string;
   children: React.ReactNode;
+  isRTL?: boolean;
 }) => {
   return (
     <p
       className={cn(
         "text-gray-600 dark:text-gray-400 leading-relaxed text-sm",
+        isRTL ? "text-right" : "text-left",
         className,
       )}
     >

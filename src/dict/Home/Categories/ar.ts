@@ -10,13 +10,13 @@ export const categoriesDictionary = {
     },
     {
       id: "tablets",
-      name: "الأجهزة اللوحية",
+      name: "تابلت",
       description: "أجهزة لوحية قوية للعمل والترفيه",
       icon: "📱",
     },
     {
       id: "laptops",
-      name: "أجهزة الكمبيوتر المحمولة",
+      name: "لابتوب",
       description: "أجهزة كمبيوتر محمولة عالية الأداء للمحترفين",
       icon: "💻",
     },
@@ -28,13 +28,13 @@ export const categoriesDictionary = {
     },
     {
       id: "hardware",
-      name: "المكونات",
+      name: "مكونات",
       description: "مكونات عتاد مميزة",
       icon: "🔧",
     },
     {
       id: "watches",
-      name: "الساعات",
+      name: "ساعات",
       description: "ساعات ذكية بميزات متقدمة",
       icon: "⌚",
     },

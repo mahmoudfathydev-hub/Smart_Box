@@ -1,9 +1,8 @@
 "use client";
 
-import ProductBasicInfo from "./ProductBasicInfo";
+import ProductIdentity from "./ProductIdentity";
 import ProductDescription from "./ProductDescription";
 import ProductCategory from "./ProductCategory";
-import ProductBrand from "./ProductBrand";
 import ProductPricing from "./ProductPricing";
 import ProductInventory from "./ProductInventory";
 import ProductImages from "./ProductImages";
@@ -22,7 +21,7 @@ export default function AddProductForm({ dict }: { dict: any }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-8">
-          <ProductBasicInfo dict={dict} />
+          <ProductIdentity dict={dict} />
           <ProductDescription dict={dict} />
           <ProductSpecs dict={dict} />
           <ProductImages dict={dict} />
@@ -30,7 +29,6 @@ export default function AddProductForm({ dict }: { dict: any }) {
 
         <div className="flex flex-col gap-8">
           <ProductCategory dict={dict} />
-          <ProductBrand dict={dict} />
           <ProductPricing dict={dict} />
           <ProductInventory dict={dict} />
         </div>

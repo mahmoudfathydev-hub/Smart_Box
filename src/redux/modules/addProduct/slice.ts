@@ -25,6 +25,7 @@ const initialState: AddProductState = {
   product: initialProduct,
   loading: false,
   error: null,
+  errors: {},
   success: false,
   uploadingImages: false,
 };
@@ -33,6 +34,12 @@ const addProductSlice = createSlice({
   name: "addProduct",
   initialState,
   reducers: {
+    setErrors: (state, action: PayloadAction<Record<string, string>>) => {
+      state.errors = action.payload;
+    },
+    clearErrors: (state) => {
+      state.errors = {};
+    },
     updateField: (
       state,
       action: PayloadAction<{ field: keyof Product; value: any }>,
@@ -104,6 +111,13 @@ const addProductSlice = createSlice({
   },
 });
 
-export const { updateField, updateSpecs, removeSpec, resetForm, setImages } =
-  addProductSlice.actions;
+export const {
+  updateField,
+  updateSpecs,
+  removeSpec,
+  resetForm,
+  setImages,
+  setErrors,
+  clearErrors,
+} = addProductSlice.actions;
 export default addProductSlice.reducer;

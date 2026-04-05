@@ -3,14 +3,14 @@
 ## Project Overview
 The **Add Product** feature is a production-grade interface designed for e-commerce store administrators to list new products. It supports multilingual inputs (English and Arabic), secure multi-image uploads via Cloudinary, and persistent data storage using Supabase.
 
-- **Key Technologies**: Next.js 16 (App Router), Redux Toolkit, Supabase, Cloudinary, shadcn/ui, TypeScript.
+- **Key Technologies**: Next.js 16 (App Router), Redux Toolkit, Supabase, Cloudinary, shadcn/ui, TypeScript, Zod, React Dropzone, Browser Image Compression.
 - **Folder Structure**:
-    - `src/redux/modules/addProduct/`: Redux logic (types, api, slice, thunks, selectors).
+    - `src/redux/modules/addProduct/`: Redux logic (types, api, slice, thunks, selectors, validation).
     - `src/app/[locale]/dashboard/add-product/`: Page and UI components.
     - `src/dict/Dashboard/Add_Products/`: Bilingual translation files.
     - `src/app/api/upload/`: Server-side Cloudinary upload route.
 - **Redux Module**: Centralized state for product data, loading status, errors, and success flags.
-- **UI Components**: 9 modularized sections including `ProductBasicInfo`, `ProductPricing`, and `ProductSpecs`.
+- **UI Components**: 8 modularized sections including `ProductIdentity`, `ProductPricing`, and `ProductImages`.
 - **Page Integration**: Localization-aware rendering using `next-intl` dictionary structure.
 
 ## Phase Summary
@@ -19,27 +19,29 @@ The **Add Product** feature is a production-grade interface designed for e-comme
 3. **UI Components**: Built 10+ reusable components using shadcn/ui primitives.
 4. **Page Integration**: Implemented the main dashboard page with locale-based rendering.
 5. **Translation**: Created comprehensive `ar.ts` and `en.ts` dictionaries.
-6. **Validation & Specs**: Implemented numeric/integer enforcement and dynamic key-value spec handling.
-7. **Cloudinary Integration**: Developed a secure server-side route for image processing.
-8. **Final Testing**: Verified RTL/LTR layouts and end-to-end state transitions.
+6. **Validation & Specs**: Implemented Zod-based validation and dynamic key-value spec handling.
+7. **Cloudinary Integration**: Developed a secure server-side route for image processing with frontend compression.
+8. **Advanced Features**: Integrated Drag-and-Drop, Image Optimization, and a 4-image limit.
 
 ## Implementation Details
-- **Types**: `Product` interface covers all 18 database columns; `AddProductState` tracks feature-specific status.
-- **Redux Slice & Thunks**: `updateField` for generic updates; `uploadImages` and `createProduct` thunks for API orchestration.
-- **Cloudinary Logic**: Images are uploaded to `Add_Products/{product-name}/${timestamp}`.
+- **Types**: `Product` interface covers all 18 database columns; `AddProductState` tracks feature-specific status including `errors`.
+- **Redux Slice & Thunks**: `updateField` for generic updates; `setErrors` and `clearErrors` for validation; `uploadImages` and `createProduct` thunks for API orchestration.
+- **Validation**:
+    - **Zod Schema**: Defined in `validation.ts`, covering all fields including image counts and name lengths.
+    - **UI Feedback**: Inline error messages with `AlertCircle` icons and border highlights on invalid fields.
+    - **Auto-Scroll**: Automatically scrolls to the first field with an error upon submission.
+- **Cloudinary & Optimization**:
+    - **Compression**: `browser-image-compression` ensures images are < 1MB before upload.
+    - **Drag-and-Drop**: `react-dropzone` integration for seamless image selection.
+    - **Limit**: Strictly enforced 4-image maximum.
 - **Supabase Logic**: Uses `.from("Add_Products").insert(product)` via a client-side API helper.
-- **Validation Rules**:
-    - Required: Name (EN/AR), Price, Category.
-    - Price: Numeric (parseFloat).
-    - Stock: Integer (parseInt).
-- **UI Primitives**: `Card`, `Input`, `Select` (custom), `Switch`, `Textarea`, `Label`, `Button`, `Separator`.
+- **UI Primitives**: `Card`, `Input`, `Select`, `Switch`, `Textarea`, `Label`, `Button`, `Separator`.
 
 ## State Flow & Redux
-- **Loading State**: Triggered during image uploads and product creation to disable buttons and show loaders.
-- **Error State**: Captures and displays API failures or validation blocks.
-- **Success State**: Triggers a 2-second notification before redirecting the user.
-- **Thunk Updates**: Thunks update the store using `extraReducers`, ensuring a "single source of truth" for the UI.
-- **Consumption**: Components use typed `useAppSelector` with specific selectors to minimize re-renders.
+- **Validation**: Schema-based validation runs before any API call.
+- **Loading State**: Triggered during image uploads and product creation to disable interaction.
+- **Error State**: Captures and shows both validation and API errors.
+- **Success State**: Triggers a notification before redirecting the user.
 
 ## Translation
 - **Locations**: `src/dict/Dashboard/Add_Products/en.ts` and `ar.ts`.
@@ -47,22 +49,19 @@ The **Add Product** feature is a production-grade interface designed for e-comme
 
 ## Cloudinary Integration
 - **Path Format**: `Add_Products/${productName}/${timestamp}` for organized storage.
-- **Multi-image**: Supports selecting and uploading multiple files simultaneously.
-- **Error Handling**: Server-side try-catch blocks return descriptive errors if the upload fails.
+- **Optimization**: Images are optimized on the client side to reduce server load and storage costs.
+- **Error Handling**: Comprehensive error reporting if upload fails.
 
-## Validation & Specs
-- **Numeric Enforcement**: Input types and helper logic ensure numeric values for price and stock.
-- **Dynamic Specs**: Users can add unlimited technical specifications. State is stored as a `Record<string, string>` and rendered dynamically.
-
-## Final Testing
-- **RTL/LTR**: Verified that Arabic fields use `dir="rtl"` and `text-right` for native UX.
+## Final Testing Result
+- **RTL/LTR**: Confirmed perfect alignment and text direction for both languages.
+- **Validation**: Zod correctly blocks invalid data and identifies the exact culprit field.
+- **Optimization**: Verified image sizes are significantly reduced before transmission.
+- **Drag-and-Drop**: Tested successfully with multiple image selections.
 - **State Flow**: confirmed reset of form on successful submission.
-- **Validation**: Blocked "Save" button until English Name is provided; alert shows for other missing fields.
-- **Upload**: Confirmed server-side secret key handling prevents client-side exposure.
 
 ## Suggestions for Improving Usage
-1. **Zod Integration**: Implement `react-hook-form` with Zod for more granular, real-time field validation.
-2. **Image Optimization**: Add client-side compression (e.g., using `browser-image-compression`) before uploading to Cloudinary.
-3. **Draft Support**: Use `localStorage` to save form progress automatically in case of page refresh.
-4. **Category Fetching**: Replace the static category select with a dynamic fetch from a `Categories` table in Supabase.
-5. **Drag-and-Drop**: Enhance `ProductImages` with a drag-and-drop zone and image reordering capabilities for the main gallery.
+1. **Real-time Validation**: Implement `onBlur` validation to give feedback before the user clicks "Save".
+2. **Image Reordering**: Add the capability to reorder uploaded images to change the "Main Image".
+3. **Category Management**: Fetch product categories dynamically from the database instead of hardcoded options.
+4. **Draft Persistence**: Save form state to `sessionStorage` to prevent data loss on page refreshes.
+5. **Success Walkthrough**: Add a guided tour or tooltip system for first-time users of the "Add Product" feature.

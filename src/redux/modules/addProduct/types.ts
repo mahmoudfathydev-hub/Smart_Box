@@ -27,6 +27,7 @@ export interface AddProductState {
   product: Product;
   loading: boolean;
   error: string | null;
+  errors: Record<string, string>;
   success: boolean;
   uploadingImages: boolean;
 }

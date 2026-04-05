@@ -137,6 +137,98 @@
   mix-blend-mode: normal;
 }
 
-html , body {
+html,
+body {
   overflow-x: hidden;
+}
+
+/* RTL Swiper Styles */
+.rtl-swiper {
+  direction: rtl;
+}
+
+.rtl-swiper .swiper-wrapper {
+  direction: rtl;
+}
+
+/* Custom Navigation Buttons */
+.swiper-button-next-custom,
+.swiper-button-prev-custom {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  background: #3D9BD6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next-custom::after,
+.swiper-button-prev-custom::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+}
+
+/* LTR Navigation */
+.ltr-nav-next {
+  right: 22px;
+}
+
+.ltr-nav-prev {
+  left: 22px;
+}
+
+.ltr-nav-next::after {
+  transform: rotate(45deg);
+  margin-left: -2px;
+}
+
+.ltr-nav-prev::after {
+  transform: rotate(-135deg);
+  margin-right: -2px;
+}
+
+/* RTL Navigation */
+.rtl-nav-next {
+  left: 22px;
+}
+
+.rtl-nav-prev {
+  right: 22px;
+}
+
+.rtl-nav-next::after {
+  transform: rotate(-135deg);
+  margin-right: -2px;
+}
+
+.rtl-nav-prev::after {
+  transform: rotate(45deg);
+  margin-left: -2px;
+}
+
+/* Hover effects */
+.swiper-button-next-custom:hover,
+.swiper-button-prev-custom:hover {
+  background: #1B3664;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.rtl-swiper .swiper-pagination,
+[dir="rtl"] .featured-products-swiper .swiper-pagination {
+  direction: ltr;
+}
+
+.rtl-swiper .swiper-slide,
+[dir="rtl"] .featured-products-swiper .swiper-slide {
+  direction: rtl;
 }

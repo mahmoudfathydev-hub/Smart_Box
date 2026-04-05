@@ -58,7 +58,7 @@ export default function MobileMenu() {
               </button>
             </div>
 
-            <nav className="flex-1 h-[500px] p-2">
+            <nav className="flex-1 h-[500px] p-2 bg-background">
               <ul className="space-y-1 flex flex-col">
                 {navLinks.map((link) => {
                   const href = `/${locale}${link.route === Routes.HOME ? "" : link.route}`;
@@ -77,7 +77,7 @@ export default function MobileMenu() {
               </ul>
             </nav>
 
-            <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+            <div className="p-4 border-t border-gray-200 bg-background dark:border-gray-800">
               <NavbarButtons />
             </div>
           </div>

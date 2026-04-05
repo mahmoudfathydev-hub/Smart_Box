@@ -1,11 +1,9 @@
-import { NavbarDictionary } from "@/types/navbar.types";
-
-export const navbarDictionary: NavbarDictionary = {
+export const navbarDictionary = {
   home: "الرئيسية",
   products: "المنتجات",
-  accessories: "الإكسسوارات",
-  compare: "المقارنة",
-  careers: "الوظائف",
+  accessories: "اكسسوارات",
+  compare: "مقارنة",
+  careers: "وظائف",
   contact: "اتصل بنا",
-  login: "تسجيل الدخول",
+  login: "تسجيل الدخول"
 };

@@ -4,8 +4,8 @@ import { useAppSelector } from "@/hooks/redux.hooks";
 import { Language } from "@/enums/language.enum";
 import { productsDictionary as enDict } from "@/dict/Products/en";
 import { productsDictionary as arDict } from "@/dict/Products/ar";
-import { Product } from "@/redux/modules/products/types";
-import ProductCard from "@/components/common/ProductCard";
+import { Product } from "@/types/product";
+import ProductCard from "@/components/products/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, RefreshCw } from "lucide-react";
@@ -63,9 +63,7 @@ export default function ProductsGrid({ products, loading, error }: ProductsGridP
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           {dictionary.empty.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          {dictionary.empty.message}
-        </p>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{dictionary.empty.message}</p>
       </div>
     );
   }
@@ -76,16 +74,8 @@ export default function ProductsGrid({ products, loading, error }: ProductsGridP
       {products.map((product) => (
         <ProductCard
           key={product.id}
-          product={{
-            id: product.id,
-            name: product.name,
-            price: product.discountPrice || product.price,
-            originalPrice: product.discountPrice ? product.price : undefined,
-            image: product.images[0]?.url || "",
-            badge: product.discountPrice ? "Sale" : undefined,
-            rating: product.rating,
-            description: product.shortDescription,
-          }}
+          product={product}
+          onProductClick={() => console.log("Product clicked:", product.slug)}
         />
       ))}
     </div>

@@ -6,11 +6,17 @@
 export interface Product {
   id: string;
   name: string;
+  name_en?: string;
+  name_ar?: string;
   description?: string;
+  description_en?: string;
+  description_ar?: string;
   price: number;
   images: string[];
   slug: string;
   category?: string;
+  category_en?: string;
+  category_ar?: string;
   createdAt?: string;
   updatedAt?: string;
   stockQuantity?: number;
@@ -18,6 +24,8 @@ export interface Product {
   currency?: string;
   rating?: number;
   brand?: string;
+  brand_en?: string;
+  brand_ar?: string;
   sku?: string;
   isActive?: boolean;
   tags?: string[];

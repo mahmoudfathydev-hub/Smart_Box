@@ -7,7 +7,7 @@ import { featuredProductsDictionary as enDict } from "@/dict/Home/FeaturedProduc
 import { featuredProductsDictionary as arDict } from "@/dict/Home/FeaturedProducts/ar";
 import { ProductRepository } from "@/lib/repositories/product.repository";
 import { Product } from "@/types/product";
-import ProductSwiper from "@/components/products/ProductSwiper";
+import ProductCard from "@/components/products/ProductCard";
 
 export default function FeaturedProductsGrid() {
   const locale = useAppSelector((state) => state.language.locale);
@@ -23,7 +23,26 @@ export default function FeaturedProductsGrid() {
       try {
         setLoading(true);
         setError(null);
-        const featuredProducts = await ProductRepository.getFeaturedProducts(8);
+        console.log("FeaturedProductsGrid - Fetching products...");
+
+        // First try to get featured products
+        let featuredProducts = await ProductRepository.getFeaturedProducts(8);
+        console.log("FeaturedProductsGrid - Fetched featured products:", featuredProducts.length);
+
+        // If no featured products, get random products
+        if (featuredProducts.length === 0) {
+          console.log("No featured products found, fetching all products...");
+          const allProductsResponse = await ProductRepository.getAllProducts();
+          const allProducts = allProductsResponse.products;
+          console.log("FeaturedProductsGrid - Fetched all products:", allProducts.length);
+
+          // Shuffle and select random products
+          const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
+          const count = allProducts.length < 8 ? allProducts.length : 8;
+          featuredProducts = shuffled.slice(0, count);
+          console.log("FeaturedProductsGrid - Selected random products:", featuredProducts.length);
+        }
+
         setProducts(featuredProducts);
       } catch (err) {
         console.error("Failed to fetch featured products:", err);
@@ -72,30 +91,16 @@ export default function FeaturedProductsGrid() {
     );
   }
 
-  if (products.length === 0) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="text-center">
-          <div className="text-gray-400 mb-4">
-            <svg
-              className="w-12 h-12 mx-auto"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-              />
-            </svg>
-          </div>
-          <p className="text-gray-600 dark:text-gray-400">{dictionary.empty}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return <ProductSwiper products={products} isRTL={isRTL} />;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onProductClick={(product) => console.log("Product clicked:", product.slug)}
+          onAddToCart={(product) => console.log("Added to cart:", product.name)}
+        />
+      ))}
+    </div>
+  );
 }

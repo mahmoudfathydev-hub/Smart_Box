@@ -43,27 +43,39 @@ export const productAdapter = {
     const discountPrice =
       row.discount && row.discount > 0 ? row.price - (row.price * row.discount) / 100 : undefined;
 
-    // Get localized name and description (default to English)
-    const name = row.name_en || row.name_ar || "";
-    const description = row.description_en || row.description_ar;
-    const category = row.category_en || row.category_ar;
-    const brand = row.brand_en || row.brand_ar;
+    // Get localized name and description (preserve both for UI)
+    const name_en = row.name_en || "";
+    const name_ar = row.name_ar || "";
+    const description_en = row.description_en || "";
+    const description_ar = row.description_ar || "";
+    const category_en = row.category_en || "";
+    const category_ar = row.category_ar || "";
+    const brand_en = row.brand_en || "";
+    const brand_ar = row.brand_ar || "";
 
     return {
       id: row.id.toString(),
-      name,
-      description,
+      name: name_en,
+      name_en,
+      name_ar,
+      description: description_en,
+      description_en,
+      description_ar,
       price: row.price,
       images,
       slug: row.slug || `product-${row.id}`,
-      category,
+      category: category_en,
+      category_en,
+      category_ar,
       createdAt: row.created_at,
       updatedAt: row.updated_at || row.created_at,
       stockQuantity: row.stock,
       discountPrice,
       currency: row.currency || "USD",
       rating: row.rating || 0,
-      brand,
+      brand: brand_en,
+      brand_en,
+      brand_ar,
       sku: row.sku,
       isActive: row.is_active !== false,
       tags: row.tags || [],

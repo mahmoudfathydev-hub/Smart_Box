@@ -72,7 +72,7 @@ export default function ProductGallery({
           alt={currentImage.alt}
           className="w-full h-full object-cover transition-transform duration-300"
           style={{
-            transform: isZoomed ? "scale(2.5)" : "scale(1)",
+            transform: isZoomed ? "scale(1.2)" : "scale(1)",
             transformOrigin: isZoomed ? `${mousePosition.x}% ${mousePosition.y}%` : "center",
           }}
         />

@@ -7,6 +7,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductSpecs from "./ProductSpecs";
+import ProductSpecsDisplay from "./ProductSpecsDisplay";
 import ProductReviews from "./ProductReviews";
 import RelatedProducts from "./RelatedProducts";
 import { Container } from "@/components/ui/container";
@@ -114,6 +115,9 @@ export default function ProductPageClient({
             </div>
           </div>
         </div>
+
+        {/* Specifications Display */}
+        <ProductSpecsDisplay specs={product.specs || []} locale={locale} />
 
         {/* Reviews Section */}
         <ProductReviews

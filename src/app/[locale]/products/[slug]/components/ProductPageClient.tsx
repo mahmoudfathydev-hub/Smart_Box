@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Product } from '@/types/product';
-import { Review, ProductRatingSummary } from '@/types/review';
-import Breadcrumbs from './Breadcrumbs';
-import ProductGallery from './ProductGallery';
-import ProductInfo from './ProductInfo';
-import ProductSpecs from './ProductSpecs';
-import ProductReviews from './ProductReviews';
-import RelatedProducts from './RelatedProducts';
-import { Container } from '@/components/ui/container';
+import { useState } from "react";
+import { Product } from "@/types/product";
+import { Review, ProductRatingSummary } from "@/types/review";
+import Breadcrumbs from "./Breadcrumbs";
+import ProductGallery from "./ProductGallery";
+import ProductInfo from "./ProductInfo";
+import ProductSpecs from "./ProductSpecs";
+import ProductReviews from "./ProductReviews";
+import RelatedProducts from "./RelatedProducts";
+import { Container } from "@/components/ui/container";
 
 interface ProductPageClientProps {
   product: Product;
@@ -42,6 +42,11 @@ export default function ProductPageClient({
   const [selectedVariant, setSelectedVariant] = useState<{
     color?: { name: string; hex: string };
     storage?: { label: string; priceModifier: number };
+    ram?: { label: string; priceModifier: number };
+    [key: string]:
+      | { label: string; priceModifier: number }
+      | { name: string; hex: string }
+      | undefined;
   }>({});
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -50,25 +55,25 @@ export default function ProductPageClient({
   // Calculate dynamic price based on selected variant
   const getDynamicPrice = () => {
     let basePrice = product.price;
-    
-    if (selectedVariant.storage) {
-      basePrice += selectedVariant.storage.priceModifier;
-    }
-    
+
+    // Add price modifiers for all selected specifications
+    Object.entries(selectedVariant).forEach(([key, variant]) => {
+      if (variant && "priceModifier" in variant) {
+        basePrice += variant.priceModifier;
+      }
+    });
+
     return basePrice;
   };
 
   const dynamicPrice = getDynamicPrice();
-  const hasDiscount = product.discountPrice && dynamicPrice < product.price;
+  const hasDiscount = Boolean(product.discountPrice && dynamicPrice < product.price);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Container className="py-8">
         {/* Breadcrumbs */}
-        <Breadcrumbs
-          product={product}
-          locale={locale}
-        />
+        <Breadcrumbs product={product} locale={locale} />
 
         {/* Product Main Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -97,24 +102,16 @@ export default function ProductPageClient({
           <div className="lg:col-span-2">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-                {locale === 'ar' ? 'الوصف' : 'Description'}
+                {locale === "ar" ? "الوصف" : "Description"}
               </h2>
               <div className="prose prose-gray dark:prose-invert max-w-none">
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {locale === 'ar' && product.description_ar
+                  {locale === "ar" && product.description_ar
                     ? product.description_ar
                     : product.description_en || product.description}
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Specifications */}
-          <div>
-            <ProductSpecs
-              specs={product.specs || []}
-              locale={locale}
-            />
           </div>
         </div>
 
@@ -130,10 +127,7 @@ export default function ProductPageClient({
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <RelatedProducts
-            products={relatedProducts}
-            locale={locale}
-          />
+          <RelatedProducts products={relatedProducts} locale={locale} />
         )}
       </Container>
     </div>

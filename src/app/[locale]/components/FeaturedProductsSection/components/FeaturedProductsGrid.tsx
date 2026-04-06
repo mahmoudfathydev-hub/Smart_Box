@@ -27,7 +27,6 @@ export default function FeaturedProductsGrid() {
     dispatch(fetchProducts() as any);
   }, [dispatch]);
 
-  // Transform database products to match ProductCard interface
   const transformedProducts = useMemo(() => {
     console.log("FeaturedProductsGrid - Raw products from DB:", products);
 
@@ -43,7 +42,6 @@ export default function FeaturedProductsGrid() {
 
       let imageUrl = "";
 
-      // Handle different possible formats of images_url
       if (Array.isArray(product.images_url)) {
         imageUrl = product.images_url[0];
       } else if (typeof product.images_url === "string") {
@@ -53,7 +51,6 @@ export default function FeaturedProductsGrid() {
             imageUrl = parsed[0];
           }
         } catch (e) {
-          // If it's a JSON string but not parseable, use as is if it looks like a URL
           if (
             product.images_url &&
             (product.images_url as string).startsWith("http")
@@ -69,16 +66,16 @@ export default function FeaturedProductsGrid() {
       const transformedProduct = {
         id: product.id || "",
         name: locale === Language.AR ? product.name_ar : product.name_en,
-        price: product.price * (1 - product.discount / 100), // Apply discount
+        price: product.price * (1 - product.discount / 100), 
         originalPrice: product.discount > 0 ? product.price : undefined,
-        image: imageUrl, // Let ProductCard handle the fallback
+        image: imageUrl, 
         badge:
           product.discount > 0
             ? `${product.discount}% OFF`
             : product.stock === 0
               ? "Out of Stock"
               : undefined,
-        rating: 4.5, // You can add rating field to database later
+        rating: 4.5, 
         description:
           locale === Language.AR
             ? product.description_ar

@@ -23,7 +23,7 @@ interface ProductsPageProps {
 }
 
 export default async function ProductsPage({ params, searchParams }: ProductsPageProps) {
-  const { locale } = params;
+  const { locale } = await params;
   const dict = locale === "ar" ? productsDictionaryAr : productsDictionary;
 
   // Parse search params
@@ -56,21 +56,51 @@ export default async function ProductsPage({ params, searchParams }: ProductsPag
 
     // Extract unique categories and brands from the response
     const allProducts = initialProductsResponse.products;
-    categories = [
-      ...new Set(
-        allProducts
-          .map((p) => p.category_en || p.category_ar || p.category)
-          .filter((cat): cat is string => Boolean(cat)),
-      ),
-    ];
+    categories = [];
+    brands = [];
 
-    brands = [
-      ...new Set(
-        allProducts
-          .map((p) => p.brand_en || p.brand_ar || p.brand)
-          .filter((brand): brand is string => Boolean(brand)),
-      ),
-    ];
+    const categorySet = new Set<string>();
+    for (const product of allProducts) {
+      const category =
+        locale === "ar"
+          ? product.category_ar || product.category_en || product.category
+          : product.category_en || product.category_ar || product.category;
+
+      if (category) {
+        const normalizedCategory = category.trim().toLowerCase();
+        if (!categorySet.has(normalizedCategory)) {
+          categorySet.add(normalizedCategory);
+          categories.push(category);
+        }
+      }
+    }
+
+    const brandSet = new Set<string>();
+    for (const product of allProducts) {
+      const brand =
+        locale === "ar"
+          ? product.brand_ar || product.brand_en || product.brand
+          : product.brand_en || product.brand_ar || product.brand;
+
+      console.log("Product brand extraction:", {
+        productId: product.id,
+        brand_en: product.brand_en,
+        brand_ar: product.brand_ar,
+        brand: product.brand,
+        locale: locale,
+        selectedBrand: brand,
+      });
+
+      if (brand) {
+        const normalizedBrand = brand.trim().toLowerCase();
+        if (!brandSet.has(normalizedBrand)) {
+          brandSet.add(normalizedBrand);
+          brands.push(brand);
+        }
+      }
+    }
+
+    console.log("Final brands for locale", locale, ":", brands);
 
     // Find max price for slider
     maxPrice = Math.max(...allProducts.map((p) => p.price), 1000);

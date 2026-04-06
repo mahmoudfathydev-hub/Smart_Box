@@ -16,9 +16,9 @@ interface FiltersSidebarProps {
   filters: ProductQueryParams;
   onFiltersChange: (filters: Partial<ProductQueryParams>) => void;
   onClearFilters: () => void;
-  categories?: string[];
-  brands?: string[];
-  maxPrice?: number;
+  categories: string[];
+  brands: string[];
+  maxPrice: number;
   className?: string;
 }
 
@@ -101,7 +101,6 @@ export default function FiltersSidebar({
 
   return (
     <div className={`w-full lg:w-80 space-y-4 ${className} ${isRTL ? "rtl" : ""}`}>
-      {/* Filters Header */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -116,7 +115,6 @@ export default function FiltersSidebar({
         </CardHeader>
       </Card>
 
-      {/* Categories Filter */}
       <Card>
         <CardHeader className="pb-3 cursor-pointer" onClick={() => toggleSection("categories")}>
           <div className="flex items-center justify-between">
@@ -160,7 +158,6 @@ export default function FiltersSidebar({
         )}
       </Card>
 
-      {/* Price Range Filter */}
       <Card>
         <CardHeader className="pb-3 cursor-pointer" onClick={() => toggleSection("price")}>
           <div className="flex items-center justify-between">
@@ -198,7 +195,6 @@ export default function FiltersSidebar({
         )}
       </Card>
 
-      {/* Brands Filter */}
       <Card>
         <CardHeader className="pb-3 cursor-pointer" onClick={() => toggleSection("brands")}>
           <div className="flex items-center justify-between">
@@ -223,8 +219,8 @@ export default function FiltersSidebar({
                   {dict.filters.brands.all}
                 </Label>
               </div>
-              {brands.slice(0, 10).map((brand) => (
-                <div key={brand} className="flex items-center space-x-2">
+              {brands.slice(0, 10).map((brand, index) => (
+                <div key={`${brand}-${index}`} className="flex items-center space-x-2">
                   <Checkbox
                     id={`brand-${brand}`}
                     checked={filters.brand === brand}
@@ -240,7 +236,6 @@ export default function FiltersSidebar({
         )}
       </Card>
 
-      {/* Rating Filter */}
       <Card>
         <CardHeader className="pb-3 cursor-pointer" onClick={() => toggleSection("rating")}>
           <div className="flex items-center justify-between">
@@ -280,7 +275,6 @@ export default function FiltersSidebar({
         )}
       </Card>
 
-      {/* Availability Filter */}
       <Card>
         <CardHeader className="pb-3 cursor-pointer" onClick={() => toggleSection("availability")}>
           <div className="flex items-center justify-between">

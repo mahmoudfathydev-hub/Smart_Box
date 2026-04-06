@@ -24,9 +24,11 @@ export interface Product {
 
 export interface AddProductState {
   product: Product;
+  products: Product[];
   loading: boolean;
   error: string | null;
   errors: Record<string, string>;
   success: boolean;
   uploadingImages: boolean;
+  fetchingProducts: boolean;
 }

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AddProductState, Product, ProductSpecs } from "./types";
-import { uploadImages, createProduct } from "./thunks";
+import { uploadImages, createProduct, fetchProducts } from "./thunks";
 
 const initialProduct: Product = {
   name_en: "",
@@ -22,11 +22,13 @@ const initialProduct: Product = {
 
 const initialState: AddProductState = {
   product: initialProduct,
+  products: [],
   loading: false,
   error: null,
   errors: {},
   success: false,
   uploadingImages: false,
+  fetchingProducts: false,
 };
 
 const addProductSlice = createSlice({
@@ -95,6 +97,18 @@ const addProductSlice = createSlice({
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to create product";
+      })
+      .addCase(fetchProducts.pending, (state) => {
+        state.fetchingProducts = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.fetchingProducts = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.fetchingProducts = false;
+        state.error = action.error.message || "Failed to fetch products";
       });
   },
 });

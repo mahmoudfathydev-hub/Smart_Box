@@ -8,6 +8,7 @@ import { useAppSelector } from "@/hooks/redux.hooks";
 import { Language } from "@/enums/language.enum";
 import { commonDictionary as enDict } from "@/dict/common/en";
 import { commonDictionary as arDict } from "@/dict/common/ar";
+import { useState, useEffect } from "react";
 
 export interface ProductCardProps {
   id: string;
@@ -20,6 +21,38 @@ export interface ProductCardProps {
   description?: string;
 }
 
+// Helper function to validate and fix URLs
+const getValidImageUrl = (imageUrl: string, fallbackId: string): string => {
+  console.log(
+    `getValidImageUrl - Input URL: "${imageUrl}" for product: ${fallbackId}`,
+  );
+
+  if (!imageUrl || imageUrl.trim() === "") {
+    console.log(
+      `getValidImageUrl - Empty URL, using fallback for ${fallbackId}`,
+    );
+    return `https://picsum.photos/seed/${fallbackId}/300/200.jpg`;
+  }
+
+  // If it's already a valid URL (starts with http), return as is
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    console.log(`getValidImageUrl - Valid HTTP URL: ${imageUrl}`);
+    return imageUrl;
+  }
+
+  // If it's a relative path starting with /, assume it's valid
+  if (imageUrl.startsWith("/")) {
+    console.log(`getValidImageUrl - Valid relative path: ${imageUrl}`);
+    return imageUrl;
+  }
+
+  // Otherwise, treat it as invalid and use fallback
+  console.log(
+    `getValidImageUrl - Invalid URL format, using fallback for ${fallbackId}`,
+  );
+  return `https://picsum.photos/seed/${fallbackId}/300/200.jpg`;
+};
+
 export default function ProductCard({
   product,
 }: {
@@ -27,6 +60,40 @@ export default function ProductCard({
 }) {
   const locale = useAppSelector((state) => state.language.locale);
   const dictionary = locale === Language.AR ? arDict : enDict;
+  const [imageSrc, setImageSrc] = useState<string>("");
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(`ProductCard useEffect - Product ID: ${product.id}`);
+    console.log(
+      `ProductCard useEffect - Original image from props: "${product.image}"`,
+    );
+
+    const validUrl = getValidImageUrl(product.image, product.id || "default");
+    console.log(`ProductCard useEffect - Validated URL: "${validUrl}"`);
+
+    setImageSrc(validUrl);
+    setImageError(false);
+  }, [product.image, product.id]);
+
+  const handleImageError = () => {
+    console.log(
+      `ProductCard handleImageError - Image failed to load for product: ${product.id}`,
+    );
+    console.log(
+      `ProductCard handleImageError - Current imageSrc: "${imageSrc}"`,
+    );
+
+    if (!imageError) {
+      setImageError(true);
+      const fallbackUrl = `https://picsum.photos/seed/fallback-${product.id || "default"}/300/200.jpg`;
+      console.log(
+        `ProductCard handleImageError - Setting fallback URL: "${fallbackUrl}"`,
+      );
+      setImageSrc(fallbackUrl);
+    }
+  };
+
   return (
     <Link href={`/products/${product.id}`} className="group block">
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#3D9BD6] dark:hover:border-[#3D9BD6] transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -42,13 +109,34 @@ export default function ProductCard({
         )}
 
         <div className="relative h-48 overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw"
-          />
+          {imageSrc && (
+            <>
+              {console.log(
+                `ProductCard Image component - About to render image for product ${product.id} with src: "${imageSrc}"`,
+              )}
+              <Image
+                src={imageSrc}
+                alt={product.name}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw"
+                onError={handleImageError}
+                unoptimized={imageSrc.startsWith("https://picsum.photos")}
+              />
+            </>
+          )}
+          {!imageSrc && (
+            <>
+              {console.log(
+                `ProductCard Image component - No imageSrc available for product ${product.id}`,
+              )}
+              <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                <span className="text-gray-500 dark:text-gray-400">
+                  No Image
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="p-6">

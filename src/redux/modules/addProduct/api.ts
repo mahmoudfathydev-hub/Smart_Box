@@ -39,3 +39,13 @@ export const createProductInSupabase = async (
   if (error) throw error;
   return data;
 };
+
+export const fetchProductsFromSupabase = async (): Promise<Product[]> => {
+  const { data, error } = await supabase
+    .from("Add_Products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+};

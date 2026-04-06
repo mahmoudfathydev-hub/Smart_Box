@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from 'react';
-import { Product, ProductQueryParams, ProductsResponse } from '@/types/product';
-import { ProductRepository } from '@/lib/repositories/product.repository';
+import React, { useState, useCallback, useMemo } from "react";
+import { Product, ProductQueryParams, ProductsResponse } from "@/types/product";
+import { ProductRepository } from "@/lib/repositories/product.repository";
 
 interface UseProductsResult {
   products: Product[];
@@ -24,8 +24,8 @@ export function useProducts(initialParams: ProductQueryParams = {}): UseProducts
   const [totalItems, setTotalItems] = useState(0);
   const [filters, setFilters] = useState<ProductQueryParams>({
     limit: 30,
-    sortBy: 'created_at',
-    sortOrder: 'desc',
+    sortBy: "created_at",
+    sortOrder: "desc",
     ...initialParams,
   });
 
@@ -42,14 +42,14 @@ export function useProducts(initialParams: ProductQueryParams = {}): UseProducts
       if (page === 1) {
         setProducts(response.products);
       } else {
-        setProducts(prev => [...prev, ...response.products]);
+        setProducts((prev) => [...prev, ...response.products]);
       }
 
       setTotalItems(response.pagination.totalItems);
       setHasMore(response.pagination.hasNextPage);
       setCurrentPage(page);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch products');
+      setError(err instanceof Error ? err.message : "Failed to fetch products");
     } finally {
       setLoading(false);
     }
@@ -60,16 +60,22 @@ export function useProducts(initialParams: ProductQueryParams = {}): UseProducts
     await fetchProducts(currentPage + 1, filters);
   }, [currentPage, filters, hasMore, loading, fetchProducts]);
 
-  const refetch = useCallback(async (newParams?: ProductQueryParams) => {
-    const params = newParams || filters;
-    await fetchProducts(1, params);
-  }, [filters, fetchProducts]);
+  const refetch = useCallback(
+    async (newParams?: ProductQueryParams) => {
+      const params = newParams || filters;
+      await fetchProducts(1, params);
+    },
+    [filters, fetchProducts],
+  );
 
-  const updateFilters = useCallback((newFilters: Partial<ProductQueryParams>) => {
-    const updatedFilters = { ...filters, ...newFilters, page: 1 };
-    setFilters(updatedFilters);
-    refetch(updatedFilters);
-  }, [filters, refetch]);
+  const updateFilters = useCallback(
+    (newFilters: Partial<ProductQueryParams>) => {
+      const updatedFilters = { ...filters, ...newFilters, page: 1 };
+      setFilters(updatedFilters);
+      refetch(updatedFilters);
+    },
+    [filters, refetch],
+  );
 
   return {
     products,

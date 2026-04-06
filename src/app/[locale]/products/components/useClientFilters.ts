@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
-import { Product, ProductQueryParams } from '@/types/product';
-import { useAppSelector } from '@/hooks/redux.hooks';
-import { Language } from '@/enums/language.enum';
+import React, { useState, useCallback, useMemo } from "react";
+import { Product, ProductQueryParams } from "@/types/product";
+import { useAppSelector } from "@/hooks/redux.hooks";
+import { Language } from "@/enums/language.enum";
 
 interface UseClientFiltersResult {
   filteredProducts: Product[];
@@ -15,21 +15,21 @@ interface UseClientFiltersResult {
 
 export function useClientFilters(
   products: Product[],
-  initialFilters: ProductQueryParams = {}
+  initialFilters: ProductQueryParams = {},
 ): UseClientFiltersResult {
   const locale = useAppSelector((state) => state.language.locale);
   const isRTL = locale === Language.AR;
-  
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<ProductQueryParams>({
     category: undefined,
     brand: undefined,
     minPrice: undefined,
     maxPrice: undefined,
     rating: undefined,
-    availability: 'all',
-    sortBy: 'created_at',
-    sortOrder: 'desc',
+    availability: "all",
+    sortBy: "created_at",
+    sortOrder: "desc",
     ...initialFilters,
   });
 
@@ -41,40 +41,44 @@ export function useClientFilters(
       const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter((product) => {
         const searchableFields = [
-          product.name_en || '',
-          product.name_ar || '',
-          product.name || '',
-          product.description_en || '',
-          product.description_ar || '',
-          product.description || '',
-          product.brand_en || '',
-          product.brand_ar || '',
-          product.brand || '',
-          product.category_en || '',
-          product.category_ar || '',
-          product.category || '',
-          product.tags?.join(' ') || '',
-        ].join(' ').toLowerCase();
-        
+          product.name_en || "",
+          product.name_ar || "",
+          product.name || "",
+          product.description_en || "",
+          product.description_ar || "",
+          product.description || "",
+          product.brand_en || "",
+          product.brand_ar || "",
+          product.brand || "",
+          product.category_en || "",
+          product.category_ar || "",
+          product.category || "",
+          product.tags?.join(" ") || "",
+        ]
+          .join(" ")
+          .toLowerCase();
+
         return searchableFields.includes(query);
       });
     }
 
     // Apply category filter
     if (filters.category) {
-      filtered = filtered.filter((product) => 
-        product.category_en === filters.category || 
-        product.category_ar === filters.category ||
-        product.category === filters.category
+      filtered = filtered.filter(
+        (product) =>
+          product.category_en === filters.category ||
+          product.category_ar === filters.category ||
+          product.category === filters.category,
       );
     }
 
     // Apply brand filter
     if (filters.brand) {
-      filtered = filtered.filter((product) => 
-        product.brand_en?.toLowerCase().includes(filters.brand!.toLowerCase()) ||
-        product.brand_ar?.includes(filters.brand!) ||
-        product.brand?.toLowerCase().includes(filters.brand!.toLowerCase())
+      filtered = filtered.filter(
+        (product) =>
+          product.brand_en?.toLowerCase().includes(filters.brand!.toLowerCase()) ||
+          product.brand_ar?.includes(filters.brand!) ||
+          product.brand?.toLowerCase().includes(filters.brand!.toLowerCase()),
       );
     }
 
@@ -95,17 +99,15 @@ export function useClientFilters(
 
     // Apply rating filter
     if (filters.rating !== undefined) {
-      filtered = filtered.filter((product) => 
-        (product.rating || 0) >= filters.rating!
-      );
+      filtered = filtered.filter((product) => (product.rating || 0) >= filters.rating!);
     }
 
     // Apply availability filter
-    if (filters.availability && filters.availability !== 'all') {
+    if (filters.availability && filters.availability !== "all") {
       filtered = filtered.filter((product) => {
-        if (filters.availability === 'in_stock') {
+        if (filters.availability === "in_stock") {
           return (product.stockQuantity || 0) > 0;
-        } else if (filters.availability === 'out_of_stock') {
+        } else if (filters.availability === "out_of_stock") {
           return (product.stockQuantity || 0) === 0;
         }
         return true;
@@ -118,19 +120,21 @@ export function useClientFilters(
         let aValue: any, bValue: any;
 
         switch (filters.sortBy) {
-          case 'name':
-            aValue = locale === Language.AR ? (a.name_ar || a.name_en || a.name) : (a.name_en || a.name);
-            bValue = locale === Language.AR ? (b.name_ar || b.name_en || b.name) : (b.name_en || b.name);
+          case "name":
+            aValue =
+              locale === Language.AR ? a.name_ar || a.name_en || a.name : a.name_en || a.name;
+            bValue =
+              locale === Language.AR ? b.name_ar || b.name_en || b.name : b.name_en || b.name;
             break;
-          case 'price':
+          case "price":
             aValue = a.discountPrice || a.price;
             bValue = b.discountPrice || b.price;
             break;
-          case 'rating':
+          case "rating":
             aValue = a.rating || 0;
             bValue = b.rating || 0;
             break;
-          case 'created_at':
+          case "created_at":
             aValue = new Date(a.createdAt || 0);
             bValue = new Date(b.createdAt || 0);
             break;
@@ -138,8 +142,8 @@ export function useClientFilters(
             return 0;
         }
 
-        if (aValue < bValue) return filters.sortOrder === 'asc' ? -1 : 1;
-        if (aValue > bValue) return filters.sortOrder === 'asc' ? 1 : -1;
+        if (aValue < bValue) return filters.sortOrder === "asc" ? -1 : 1;
+        if (aValue > bValue) return filters.sortOrder === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -148,20 +152,20 @@ export function useClientFilters(
   }, [products, searchQuery, filters, locale]);
 
   const setFiltersInternal = useCallback((newFilters: Partial<ProductQueryParams>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
   }, []);
 
   const clearFilters = useCallback(() => {
-    setSearchQuery('');
+    setSearchQuery("");
     setFilters({
       category: undefined,
       brand: undefined,
       minPrice: undefined,
       maxPrice: undefined,
       rating: undefined,
-      availability: 'all',
-      sortBy: 'created_at',
-      sortOrder: 'desc',
+      availability: "all",
+      sortBy: "created_at",
+      sortOrder: "desc",
     });
   }, []);
 
@@ -172,7 +176,7 @@ export function useClientFilters(
     if (filters.minPrice !== undefined) count++;
     if (filters.maxPrice !== undefined) count++;
     if (filters.rating !== undefined) count++;
-    if (filters.availability && filters.availability !== 'all') count++;
+    if (filters.availability && filters.availability !== "all") count++;
     return count;
   }, [searchQuery, filters]);
 

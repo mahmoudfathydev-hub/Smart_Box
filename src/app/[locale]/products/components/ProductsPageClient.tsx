@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Product, ProductsResponse, ProductQueryParams } from "@/types/product";
 import { useAppDispatch } from "@/hooks/redux.hooks";
 import { Language } from "@/enums/language.enum";
@@ -63,6 +63,12 @@ export default function ProductsPageClient({
     return fetchedProducts.length > 0 ? fetchedProducts : initialProducts;
   }, [fetchedProducts, initialProducts, currentPage]);
 
+  // Determine pagination strategy
+  const totalProducts = totalItems || allProducts.length;
+  const useBasicPagination = totalProducts < 100 && totalProducts >= 20;
+  const showAllProducts = totalProducts < 20;
+  const disableInfiniteScroll = showAllProducts || useBasicPagination;
+
   // Use client-side filtering
   const {
     filteredProducts,
@@ -94,10 +100,10 @@ export default function ProductsPageClient({
 
   // Infinite scroll trigger
   useEffect(() => {
-    if (isNearBottom && hasMore && !loading) {
+    if (isNearBottom && hasMore && !loading && !disableInfiniteScroll) {
       fetchMore();
     }
-  }, [isNearBottom, hasMore, loading, fetchMore]);
+  }, [isNearBottom, hasMore, loading, fetchMore, disableInfiniteScroll]);
 
   // Handle product interactions
   const handleProductClick = useCallback(
@@ -134,11 +140,6 @@ export default function ProductsPageClient({
     clearFilters();
     setSearchQuery("");
   }, [clearFilters, setSearchQuery]);
-
-  // Determine pagination strategy
-  const totalProducts = allProducts.length;
-  const useBasicPagination = totalProducts < 100 && totalProducts >= 20;
-  const showAllProducts = totalProducts < 20;
 
   // Determine which grid to use
   const shouldUseVirtualized = filteredProducts.length > 50 && !showAllProducts;
@@ -245,8 +246,7 @@ export default function ProductsPageClient({
               </>
             )}
 
-            {/* Infinite Scroll Trigger */}
-            {hasMore && filteredProducts.length > 0 && (
+            {hasMore && filteredProducts.length > 0 && !showAllProducts && (
               <div ref={scrollTriggerRef} className="py-8">
                 {loading && <SkeletonLoader count={4} />}
               </div>

@@ -72,6 +72,18 @@ export default function ProductCard({
     return locale === Language.AR ? "متوفر" : "In Stock";
   };
 
+  const getLocalizedPrice = (price: number) => {
+    if (locale === Language.AR) {
+      const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+      return price.toFixed(2).replace(/[0-9]/g, (digit) => arabicDigits[parseInt(digit)]);
+    }
+    return price.toFixed(2);
+  };
+
+  const getLocalizedCurrency = () => {
+    return locale === Language.AR ? "دولار" : "USD";
+  };
+
   const getAddToCartText = () => {
     return locale === Language.AR ? "أضف للسلة" : "Add to Cart";
   };
@@ -79,12 +91,10 @@ export default function ProductCard({
   return (
     <Link href={`/products/${product.slug}`} className="group block">
       <div
-        className={`relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#3D9BD6] dark:hover:border-[#3D9BD6] transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isRTL ? "text-right" : "text-left"}`}
+        className={`relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#3D9BD6] dark:hover:border-[#3D9BD6] transition-all duration-300 hover:shadow-xl hover:-translate-y-1 min-h-[450px] ${isRTL ? "text-right" : "text-left"}`}
       >
-        {/* Top gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/3 via-transparent to-purple-500/3 pointer-events-none" />
 
-        {/* Badge */}
         {discountPercentage > 0 && (
           <div className={`absolute top-4 z-20 ${isRTL ? "right-4" : "left-4"}`}>
             <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full shadow-lg font-bold border-0">
@@ -93,25 +103,6 @@ export default function ProductCard({
           </div>
         )}
 
-        {/* Favorite Button */}
-        {onToggleFavorite && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={`absolute top-4 z-20 bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-md ${isRTL ? "left-4" : "right-4"} rounded-full w-8 h-8 p-0`}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onToggleFavorite(product);
-            }}
-          >
-            <Heart
-              className={`h-3 w-3 transition-colors duration-300 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"}`}
-            />
-          </Button>
-        )}
-
-        {/* Product Image */}
         <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <Image
@@ -127,50 +118,53 @@ export default function ProductCard({
           />
         </div>
 
-        {/* Product Info */}
-        <div className="p-4 relative">
-          {/* Category */}
-          {getCategory() && (
-            <div className="mb-2">
+        <div className="p-4 relative flex flex-col h-full">
+          <div className="mb-2">
+            {getCategory() && (
               <Badge
                 variant="secondary"
                 className="text-xs font-semibold bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-200 border-0 px-2 py-1 rounded-full"
               >
                 {getCategory()}
               </Badge>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Product Name */}
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#3D9BD6] transition-colors duration-300 line-clamp-2 leading-tight">
-            {getName()}
-          </h3>
+          <div className="mb-2 h-[3rem]">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-[#3D9BD6] transition-colors duration-300 line-clamp-2 leading-tight">
+              {getName()}
+            </h3>
+          </div>
 
-          {/* Description */}
-          {getDescription() && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 leading-relaxed">
-              {getDescription()}
-            </p>
-          )}
-          {/* Price Section */}
-          <div
-            className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : "flex-row"}`}
-          >
-            <div className={`flex items-end ${isRTL ? "space-x-reverse space-x-2" : "space-x-2"}`}>
+          <div className="mb-3 h-[2.5rem]">
+            {getDescription() ? (
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                {getDescription()}
+              </p>
+            ) : (
+              <div className="h-[2.5rem]"></div>
+            )}
+          </div>
+
+          <div className="flex-grow"></div>
+
+          <div className="flex items-center justify-between mb-4">
+            <div className={`flex items-end ${isRTL ? "space-x-reverse space-x-0" : "space-x-0"}`}>
               {product.discountPrice && (
                 <span className="text-sm text-gray-500 dark:text-gray-500 line-through font-medium pb-1">
-                  ${product.price.toFixed(2)}
+                  ${getLocalizedPrice(product.price)}
                 </span>
               )}
-              <div className="flex flex-col">
+              <div className="flex flex-row items-center">
                 <span className="text-xl font-black text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
-                  ${(product.discountPrice || product.price || 0).toFixed(2)}
+                  $ {getLocalizedPrice(product.discountPrice || product.price || 0)}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">USD</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium ml-1">
+                  {getLocalizedCurrency()}
+                </span>
               </div>
             </div>
 
-            {/* Stock Status */}
             <Badge
               variant={
                 product.stockQuantity && product.stockQuantity > 0 ? "default" : "destructive"
@@ -185,7 +179,6 @@ export default function ProductCard({
             </Badge>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-2">
             {onAddToCart && (
               <button
@@ -203,8 +196,7 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Bottom gradient accent */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1B3664] via-[#3D9BD6] to-[#1B3664] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#1B3664] via-[#3D9BD6] to-[#1B3664] opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100" />
         </div>
       </div>
     </Link>

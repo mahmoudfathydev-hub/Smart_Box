@@ -89,7 +89,7 @@ export default function ProductCard({
   };
 
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
+    <Link href={`/products/${product.id}`} className="group block">
       <div
         className={`relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#3D9BD6] dark:hover:border-[#3D9BD6] transition-all duration-300 hover:shadow-xl hover:-translate-y-1 min-h-[450px] ${isRTL ? "text-right" : "text-left"}`}
       >

@@ -1,13 +1,13 @@
-import { supabase } from '@/lib/supabase';
-import { Product, ProductRow, ProductQueryParams, ProductsResponse } from '@/types/product';
-import { productAdapter } from '@/lib/adapters/product.adapter';
+import { supabase } from "@/lib/supabase";
+import { Product, ProductRow, ProductQueryParams, ProductsResponse } from "@/types/product";
+import { productAdapter } from "@/lib/adapters/product.adapter";
 
 /**
  * Product Repository
  * Single source of truth for all product data operations
  */
 export class ProductRepository {
-  private static readonly TABLE_NAME = 'Add_Products';
+  private static readonly TABLE_NAME = "Add_Products";
 
   /**
    * Get all products with filtering and pagination
@@ -24,17 +24,17 @@ export class ProductRepository {
       rating,
       availability,
       tags,
-      sortBy = 'created_at',
-      sortOrder = 'desc',
+      sortBy = "created_at",
+      sortOrder = "desc",
     } = params;
 
-    let query = supabase
-      .from(this.TABLE_NAME)
-      .select('*', { count: 'exact' });
+    let query = supabase.from(this.TABLE_NAME).select("*", { count: "exact" });
 
     // Apply filters
     if (search) {
-      query = query.or(`name_en.ilike.%${search}%,name_ar.ilike.%${search}%,description_en.ilike.%${search}%,description_ar.ilike.%${search}%`);
+      query = query.or(
+        `name_en.ilike.%${search}%,name_ar.ilike.%${search}%,description_en.ilike.%${search}%,description_ar.ilike.%${search}%`,
+      );
     }
 
     if (category) {
@@ -46,31 +46,31 @@ export class ProductRepository {
     }
 
     if (minPrice !== undefined) {
-      query = query.gte('price', minPrice);
+      query = query.gte("price", minPrice);
     }
 
     if (maxPrice !== undefined) {
-      query = query.lte('price', maxPrice);
+      query = query.lte("price", maxPrice);
     }
 
     if (rating !== undefined) {
-      query = query.gte('rating', rating);
+      query = query.gte("rating", rating);
     }
 
-    if (availability && availability !== 'all') {
-      if (availability === 'in_stock') {
-        query = query.gt('stock', 0);
+    if (availability && availability !== "all") {
+      if (availability === "in_stock") {
+        query = query.gt("stock", 0);
       } else {
-        query = query.eq('stock', 0);
+        query = query.eq("stock", 0);
       }
     }
 
     if (tags && tags.length > 0) {
-      query = query.contains('tags', tags);
+      query = query.contains("tags", tags);
     }
 
     // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    query = query.order(sortBy, { ascending: sortOrder === "asc" });
 
     // Apply pagination
     const offset = (page - 1) * limit;
@@ -98,17 +98,47 @@ export class ProductRepository {
   }
 
   /**
-   * Get single product by slug
+   * Get single product by slug (using name_en as slug)
    */
   static async getProductBySlug(slug: string): Promise<Product | null> {
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .select('*')
-      .eq('slug', slug)
-      .single();
+    let data, error;
+
+    // Try to find by name_en (treating name_en as slug)
+    const result = await supabase.from(this.TABLE_NAME).select("*").eq("name_en", slug).single();
+
+    data = result.data;
+    error = result.error;
+
+    // If not found by exact name match, try ID fallback
+    if (!data && error?.code === "PGRST116") {
+      const numericId = parseInt(slug);
+      if (!isNaN(numericId)) {
+        const idResult = await supabase
+          .from(this.TABLE_NAME)
+          .select("*")
+          .eq("id", numericId)
+          .single();
+
+        data = idResult.data;
+        error = idResult.error;
+      }
+    }
+
+    // If still not found, try partial name match
+    if (!data && error?.code === "PGRST116") {
+      const nameResult = await supabase
+        .from(this.TABLE_NAME)
+        .select("*")
+        .ilike("name_en", `%${slug}%`)
+        .limit(1)
+        .single();
+
+      data = nameResult.data;
+      error = nameResult.error;
+    }
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         return null; // Product not found
       }
       throw new Error(`Failed to fetch product: ${error.message}`);
@@ -123,9 +153,9 @@ export class ProductRepository {
   static async getFeaturedProducts(limit: number = 8): Promise<Product[]> {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
-      .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -141,10 +171,10 @@ export class ProductRepository {
   static async getProductsByCategory(category: string, limit: number = 12): Promise<Product[]> {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
-      .select('*')
+      .select("*")
       .or(`category_en.eq.${category},category_ar.eq.${category}`)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -157,14 +187,18 @@ export class ProductRepository {
   /**
    * Get related products by category
    */
-  static async getRelatedProducts(category: string, excludeSlug: string, limit: number = 8): Promise<Product[]> {
+  static async getRelatedProducts(
+    category: string,
+    excludeSlug: string,
+    limit: number = 8,
+  ): Promise<Product[]> {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
-      .select('*')
+      .select("*")
       .or(`category_en.eq.${category},category_ar.eq.${category}`)
-      .neq('slug', excludeSlug)
-      .eq('is_active', true)
-      .order('rating', { ascending: false })
+      .neq("slug", excludeSlug)
+      .eq("is_active", true)
+      .order("rating", { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -180,10 +214,12 @@ export class ProductRepository {
   static async searchProducts(query: string, limit: number = 12): Promise<Product[]> {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
-      .select('*')
-      .or(`name_en.ilike.%${query}%,name_ar.ilike.%${query}%,description_en.ilike.%${query}%,description_ar.ilike.%${query}%`)
-      .eq('is_active', true)
-      .order('rating', { ascending: false })
+      .select("*")
+      .or(
+        `name_en.ilike.%${query}%,name_ar.ilike.%${query}%,description_en.ilike.%${query}%,description_ar.ilike.%${query}%`,
+      )
+      .eq("is_active", true)
+      .order("rating", { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -199,10 +235,10 @@ export class ProductRepository {
   static async getProductsOnSale(limit: number = 12): Promise<Product[]> {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
-      .select('*')
-      .gt('discount', 0)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
+      .select("*")
+      .gt("discount", 0)
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -216,11 +252,7 @@ export class ProductRepository {
    * Create new product
    */
   static async createProduct(product: Partial<ProductRow>): Promise<Product> {
-    const { data, error } = await supabase
-      .from(this.TABLE_NAME)
-      .insert(product)
-      .select()
-      .single();
+    const { data, error } = await supabase.from(this.TABLE_NAME).insert(product).select().single();
 
     if (error) {
       throw new Error(`Failed to create product: ${error.message}`);
@@ -236,7 +268,7 @@ export class ProductRepository {
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .update(updates)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
@@ -251,10 +283,7 @@ export class ProductRepository {
    * Delete product
    */
   static async deleteProduct(id: number): Promise<void> {
-    const { error } = await supabase
-      .from(this.TABLE_NAME)
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from(this.TABLE_NAME).delete().eq("id", id);
 
     if (error) {
       throw new Error(`Failed to delete product: ${error.message}`);

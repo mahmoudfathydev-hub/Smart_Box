@@ -59,6 +59,15 @@ export const productAdapter = {
     const brand_en = row.brand_en || "";
     const brand_ar = row.brand_ar || "";
 
+    // Generate slug from name_en (as requested)
+    const slug =
+      name_en
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim() || `product-${row.id}`;
+
     return {
       id: row.id.toString(),
       name: name_en,
@@ -69,7 +78,7 @@ export const productAdapter = {
       description_ar,
       price: row.price,
       images,
-      slug: row.slug || `product-${row.id}`,
+      slug,
       category: category_en,
       category_en,
       category_ar,

@@ -14,7 +14,9 @@ class ProductsApi {
     options: RequestInit = {},
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    console.log("API Request URL:", url);
+
+    console.log("=== PRODUCTS API DEBUG ===");
+    console.log("API Request:", { url, options });
 
     const defaultHeaders = {
       "Content-Type": "application/json",
@@ -29,10 +31,19 @@ class ProductsApi {
     };
 
     try {
+      console.log("Sending fetch request...");
       const response = await fetch(url, config);
+
+      console.log("Response received:", {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: response.url,
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error("API Error Response:", errorData);
         throw new Error(
           errorData.message ||
             errorData.error ||
@@ -41,16 +52,31 @@ class ProductsApi {
       }
 
       const contentType = response.headers.get("content-type");
+      console.log("Response content type:", contentType);
+
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
+        console.error("Non-JSON response:", text.substring(0, 200));
         throw new Error(
           `Expected JSON response but received ${contentType || "unknown content type"}. ` +
             `Response starts with: ${text.substring(0, 100)}...`,
         );
       }
 
-      return await response.json();
+      const data = await response.json();
+      console.log("API Response Data:", data);
+      console.log("=== END PRODUCTS API DEBUG ===");
+
+      return data;
     } catch (error) {
+      console.error("=== PRODUCTS API ERROR ===");
+      console.error("Network/API error:", error);
+      console.error("Error type:", typeof error);
+      console.error(
+        "Error message:",
+        error instanceof Error ? error.message : "Unknown error",
+      );
+
       if (error instanceof Error) {
         throw error;
       }

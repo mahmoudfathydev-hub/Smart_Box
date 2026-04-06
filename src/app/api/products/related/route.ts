@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ProductsService } from "@/lib/services/products.service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,12 +15,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Return empty related products since mock data is removed
-    return NextResponse.json({ products: [] });
+    // Get related products from database
+    const relatedProducts = await ProductsService.getRelatedProducts(
+      category,
+      limit,
+    );
+
+    return NextResponse.json({ products: relatedProducts });
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch related products" },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch related products",
+      },
       { status: 500 },
     );
   }

@@ -7,9 +7,12 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (params: FetchProductsParams = {}, { rejectWithValue }) => {
     try {
+      console.log("Calling ProductsService.getProducts with params:", params);
       const response = await productsApi.getProducts(params);
+      console.log("Products fetched successfully:", response);
       return response;
     } catch (error) {
+      console.error("Error in fetchProducts thunk:", error);
       return rejectWithValue(
         error instanceof Error ? error.message : 'Failed to fetch products'
       );

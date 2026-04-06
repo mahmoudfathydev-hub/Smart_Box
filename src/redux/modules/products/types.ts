@@ -1,9 +1,4 @@
-export interface ProductImage {
-  id: string;
-  url: string;
-  alt: string;
-  order: number;
-}
+import { ProductImage } from "@/types/product";
 
 export interface ProductSpec {
   id: string;
@@ -54,10 +49,10 @@ export interface ProductsFilters {
   minPrice?: number;
   maxPrice?: number;
   rating?: number;
-  availability?: 'in_stock' | 'out_of_stock' | 'all';
+  availability?: "in_stock" | "out_of_stock" | "all";
   tags?: string[];
-  sortBy?: 'name' | 'price' | 'rating' | 'created_at' | 'popularity';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "name" | "price" | "rating" | "created_at" | "popularity";
+  sortOrder?: "asc" | "desc";
 }
 
 export interface Pagination {
@@ -66,7 +61,7 @@ export interface Pagination {
   totalItems: number;
   itemsPerPage: number;
   hasNextPage: boolean;
-  hasPrevPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export interface ProductsState {

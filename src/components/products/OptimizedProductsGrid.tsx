@@ -19,10 +19,6 @@ interface OptimizedProductsGridProps {
   containerHeight?: number;
 }
 
-/**
- * Optimized Products Grid with Virtualization
- * Uses standardized Product type
- */
 const OptimizedProductsGrid: React.FC<OptimizedProductsGridProps> = ({
   products,
   loading = false,
@@ -34,7 +30,6 @@ const OptimizedProductsGrid: React.FC<OptimizedProductsGridProps> = ({
   itemHeight = 400,
   containerHeight = 600,
 }) => {
-  // Memoize product card rendering to prevent unnecessary re-renders
   const renderProductCard = useCallback(
     (product: Product, index: number, style: React.CSSProperties) => {
       const isFavorite = favorites.has(product.id);
@@ -42,7 +37,7 @@ const OptimizedProductsGrid: React.FC<OptimizedProductsGridProps> = ({
         ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
         : 0;
 
-      const imageUrl = product.images[0] || "/images/product-placeholder.jpg";
+      const imageUrl = product.images[0]?.url || "/images/product-placeholder.jpg";
 
       return (
         <div style={style} className="p-2">

@@ -3,6 +3,13 @@
  * Compatible with Add_Products table structure
  */
 
+export interface ProductImage {
+  id: string;
+  url: string;
+  alt: string;
+  order: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -12,7 +19,7 @@ export interface Product {
   description_en?: string;
   description_ar?: string;
   price: number;
-  images: string[];
+  images: ProductImage[];
   slug: string;
   category?: string;
   category_en?: string;

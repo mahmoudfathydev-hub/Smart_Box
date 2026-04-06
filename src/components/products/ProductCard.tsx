@@ -41,7 +41,7 @@ export default function ProductCard({
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
 
-  const imageUrl = product.images[0] || "/images/product-placeholder.jpg";
+  const imageUrl = product.images[0]?.url || "/images/product-placeholder.jpg";
 
   // Get localized content with character limits
   const getName = () => {

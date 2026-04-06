@@ -1,4 +1,4 @@
-import { Product, ProductRow } from "@/types/product";
+import { Product, ProductRow, ProductImage } from "@/types/product";
 
 /**
  * Product Adapter
@@ -9,13 +9,19 @@ export const productAdapter = {
    * Map database row to UI Product type
    */
   mapProductRow(row: ProductRow): Product {
-    // Handle images - parse from JSON string if needed
-    let images: string[] = [];
+    // Handle images - parse from JSON string if needed and convert to ProductImage[]
+    let images: ProductImage[] = [];
     if (row.images_url) {
       try {
         const parsedImages =
           typeof row.images_url === "string" ? JSON.parse(row.images_url) : row.images_url;
-        images = Array.isArray(parsedImages) ? parsedImages : [];
+        const imageStrings = Array.isArray(parsedImages) ? parsedImages : [];
+        images = imageStrings.map((url: string, index: number) => ({
+          id: `img-${index}`,
+          url,
+          alt: `${row.name_en || "Product"} image ${index + 1}`,
+          order: index,
+        }));
       } catch (error) {
         console.error("Error parsing images_url:", error);
         images = [];
@@ -119,7 +125,9 @@ export const productAdapter = {
         ? Object.fromEntries(product.specs.map((spec) => [spec.name, spec.value]))
         : undefined,
       images_url:
-        product.images && product.images.length > 0 ? JSON.stringify(product.images) : undefined,
+        product.images && product.images.length > 0
+          ? JSON.stringify(product.images.map((img) => img.url))
+          : undefined,
     };
   },
 };

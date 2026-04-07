@@ -1,37 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Eye, EyeOff, Mail, Lock, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { signInSchema, SignInFormData } from "@/lib/validation/authValidation";
+import { SignInFormData } from "@/lib/validation/signInValidation";
 
 interface SignInFormProps {
+  register: any;
+  handleSubmit: any;
+  errors: any;
+  showPassword: boolean;
+  setShowPassword: (show: boolean) => void;
   onSubmit: (data: SignInFormData) => void;
   isLoading: boolean;
   error: string | null;
-  t: any; // Using any since the exact type structure is complex
+  t: any;
 }
 
-export default function SignInForm({ onSubmit, isLoading, error, t }: SignInFormProps) {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
-    defaultValues: {
-      rememberMe: false,
-    },
-  });
-
+export default function SignInForm({
+  register,
+  handleSubmit,
+  errors,
+  showPassword,
+  setShowPassword,
+  onSubmit,
+  isLoading,
+  error,
+  t,
+}: SignInFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && (
@@ -52,7 +50,7 @@ export default function SignInForm({ onSubmit, isLoading, error, t }: SignInForm
             {...register("email")}
           />
         </div>
-        {errors.email && <p className="text-sm text-destructive">{t.errors.emailRequired}</p>}
+        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
       </div>
 
       <div className="space-y-2">
@@ -74,7 +72,7 @@ export default function SignInForm({ onSubmit, isLoading, error, t }: SignInForm
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        {errors.password && <p className="text-sm text-destructive">{t.errors.passwordRequired}</p>}
+        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
       </div>
 
       <div className="space-y-2">

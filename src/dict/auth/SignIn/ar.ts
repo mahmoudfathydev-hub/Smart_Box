@@ -8,7 +8,6 @@ export const signInTranslations = {
   phoneLabel: "رقم الهاتف (اختياري)",
   phonePlaceholder: "أدخل رقم هاتفك",
   rememberMe: "تذكرني",
-  forgotPassword: "نسيت كلمة المرور؟",
   signInButton: "تسجيل الدخول",
   noAccount: "ليس لديك حساب؟",
   signUpLink: "إنشاء حساب",

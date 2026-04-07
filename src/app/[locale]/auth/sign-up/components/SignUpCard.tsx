@@ -1,12 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface SignInCardProps {
+interface SignUpCardProps {
   title: string;
   subtitle: string;
   children: React.ReactNode;
 }
 
-export default function SignInCard({ title, subtitle, children }: SignInCardProps) {
+export default function SignUpCard({ title, subtitle, children }: SignUpCardProps) {
   return (
     <div className="w-full max-w-md">
       <Card className="border-0 shadow-xl">
@@ -14,7 +14,9 @@ export default function SignInCard({ title, subtitle, children }: SignInCardProp
           <CardTitle className="text-2xl font-bold">{title}</CardTitle>
           <CardDescription>{subtitle}</CardDescription>
         </CardHeader>
-        <CardContent>{children}</CardContent>
+        <CardContent>
+          {children}
+        </CardContent>
       </Card>
     </div>
   );

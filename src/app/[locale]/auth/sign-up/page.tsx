@@ -1,5 +1,5 @@
-import SignUpPage from "./components";
+import { SignUpContainer } from "./components";
 
 export default function SignUpPageRoute() {
-  return <SignUpPage />;
+  return <SignUpContainer/>;
 }

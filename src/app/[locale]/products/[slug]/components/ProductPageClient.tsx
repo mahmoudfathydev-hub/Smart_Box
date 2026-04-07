@@ -9,7 +9,6 @@ import ProductInfo from "./ProductInfo";
 import ProductSpecs from "./ProductSpecs";
 import ProductSpecsDisplay from "./ProductSpecsDisplay";
 import ProductReviews from "./ProductReviews";
-import RelatedProducts from "./RelatedProducts";
 import { Container } from "@/components/ui/container";
 
 interface ProductPageClientProps {
@@ -129,10 +128,6 @@ export default function ProductPageClient({
           locale={locale}
         />
 
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <RelatedProducts products={relatedProducts} locale={locale} />
-        )}
       </Container>
     </div>
   );

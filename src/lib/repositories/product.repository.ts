@@ -53,9 +53,7 @@ export class ProductRepository {
       query = query.lte("price", maxPrice);
     }
 
-    if (rating !== undefined) {
-      query = query.gte("rating", rating);
-    }
+    // Note: rating filter removed as column doesn't exist in database
 
     if (availability && availability !== "all") {
       if (availability === "in_stock") {
@@ -192,20 +190,47 @@ export class ProductRepository {
     excludeSlug: string,
     limit: number = 8,
   ): Promise<Product[]> {
+    // First, get the product ID from the slug since slug column doesn't exist in DB
+    const { data: productData, error: productError } = await supabase
+      .from(this.TABLE_NAME)
+      .select("id, name_en")
+      .eq("is_active", true)
+      .limit(1000);
+
+    if (productError) {
+      throw new Error(`Failed to fetch products for slug lookup: ${productError.message}`);
+    }
+
+    // Find the product ID that matches the excludeSlug
+    const excludeProduct = productData?.find((product) => {
+      const generatedSlug =
+        product.name_en
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .trim() || `product-${product.id}`;
+      return generatedSlug === excludeSlug;
+    });
+
+    const excludeProductId = excludeProduct?.id;
+
     const { data, error } = await supabase
       .from(this.TABLE_NAME)
       .select("*")
       .or(`category_en.eq.${category},category_ar.eq.${category}`)
-      .neq("slug", excludeSlug)
       .eq("is_active", true)
-      .order("rating", { ascending: false })
-      .limit(limit);
+      .order("created_at", { ascending: false })
+      .limit(limit + (excludeProductId ? 1 : 0)); // Get extra to account for exclusion
 
     if (error) {
       throw new Error(`Failed to fetch related products: ${error.message}`);
     }
 
-    return (data || []).map(productAdapter.mapProductRow);
+    // Filter out the excluded product by ID
+    const filteredData = (data || []).filter((product) => product.id !== excludeProductId);
+
+    return filteredData.slice(0, limit).map(productAdapter.mapProductRow);
   }
 
   /**
@@ -219,7 +244,7 @@ export class ProductRepository {
         `name_en.ilike.%${query}%,name_ar.ilike.%${query}%,description_en.ilike.%${query}%,description_ar.ilike.%${query}%`,
       )
       .eq("is_active", true)
-      .order("rating", { ascending: false })
+      .order("created_at", { ascending: false })
       .limit(limit);
 
     if (error) {

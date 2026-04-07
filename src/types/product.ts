@@ -76,7 +76,7 @@ export interface ProductRow {
   weight?: number;
   dimensions?: any;
   currency?: string;
-  rating?: number;
+  // Note: rating is not stored in database, it's calculated from reviews
   tags?: string[];
 }
 

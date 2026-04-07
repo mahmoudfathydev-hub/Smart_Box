@@ -87,7 +87,7 @@ export const productAdapter = {
       stockQuantity: row.stock,
       discountPrice,
       currency: row.currency || "USD",
-      rating: row.rating || 0,
+      rating: 0, // Default to 0 since rating is calculated from reviews, not stored in DB
       brand: brand_en,
       brand_en,
       brand_ar,
@@ -125,7 +125,7 @@ export const productAdapter = {
       sku: product.sku,
       slug: product.slug,
       is_active: product.isActive,
-      rating: product.rating,
+      // Note: rating is not stored in DB, it's calculated from reviews
       currency: product.currency,
       tags: product.tags,
       weight: product.weight,

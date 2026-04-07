@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "@/redux/slices/themeSlice";
 import languageReducer from "@/redux/slices/languageSlice";
+import authReducer from "@/redux/slices/authSlice";
 import addProductReducer from "@/redux/modules/addProduct/slice";
 import productsReducer from "@/redux/modules/products/slice";
 import { productsApiSlice } from "@/redux/modules/products/apiSlice";
@@ -9,6 +10,7 @@ export const store = configureStore({
   reducer: {
     theme: themeReducer,
     language: languageReducer,
+    auth: authReducer,
     addProduct: addProductReducer,
     products: productsReducer,
     // Add RTK Query API reducer

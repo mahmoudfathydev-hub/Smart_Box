@@ -16,7 +16,7 @@ const initialState: ProductsState = {
     totalItems: 0,
     itemsPerPage: 12,
     hasNextPage: false,
-    hasPrevPage: false,
+    hasPreviousPage: false,
   },
   loading: false,
   error: null,
@@ -85,15 +85,11 @@ const productsSlice = createSlice({
     // Remove product from state
     removeProduct: (state, action: PayloadAction<string>) => {
       const productId = action.payload;
-      state.products = state.products.filter(
-        (product) => product.id !== productId,
-      );
+      state.products = state.products.filter((product) => product.id !== productId);
       if (state.productDetails?.id === productId) {
         state.productDetails = null;
       }
-      state.relatedProducts = state.relatedProducts.filter(
-        (product) => product.id !== productId,
-      );
+      state.relatedProducts = state.relatedProducts.filter((product) => product.id !== productId);
     },
 
     // Sync products from RTK Query (for backward compatibility)

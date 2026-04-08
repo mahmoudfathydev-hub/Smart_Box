@@ -5,6 +5,8 @@ import authReducer from "@/redux/slices/authSlice";
 import addProductReducer from "@/redux/modules/addProduct/slice";
 import productsReducer from "@/redux/modules/products/slice";
 import { productsApiSlice } from "@/redux/modules/products/apiSlice";
+import accessoriesReducer from "@/redux/modules/accessories/slice";
+import { accessoriesApiSlice } from "@/redux/modules/accessories/apiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,8 +15,10 @@ export const store = configureStore({
     auth: authReducer,
     addProduct: addProductReducer,
     products: productsReducer,
-    // Add RTK Query API reducer
+    accessories: accessoriesReducer,
+    // Add RTK Query API reducers
     [productsApiSlice.reducerPath]: productsApiSlice.reducer,
+    [accessoriesApiSlice.reducerPath]: accessoriesApiSlice.reducer,
   },
   // Add RTK Query middleware
   middleware: (getDefaultMiddleware) =>
@@ -22,7 +26,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
-    }).concat(productsApiSlice.middleware),
+    }).concat(productsApiSlice.middleware, accessoriesApiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

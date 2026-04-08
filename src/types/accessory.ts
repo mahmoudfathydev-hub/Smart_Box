@@ -1,16 +1,16 @@
 /**
- * Unified Product Type
- * Compatible with Add_Products table structure
+ * Unified Accessory Type
+ * Compatible with accessories table structure
  */
 
-export interface ProductImage {
+export interface AccessoryImage {
   id: string;
   url: string;
   alt: string;
   order: number;
 }
 
-export interface Product {
+export interface Accessory {
   id: string;
   name: string;
   name_en?: string;
@@ -19,22 +19,20 @@ export interface Product {
   description_en?: string;
   description_ar?: string;
   price: number;
-  images: ProductImage[];
+  image_url?: string;
   slug: string;
-  category?: string;
-  category_en?: string;
-  category_ar?: string;
+  type?: string;
+  brand?: string;
+  sku?: string;
+  status?: string;
+  discount?: number;
+  discountPrice?: number;
+  stock_quantity?: number;
+  compatible_devices?: string[];
   createdAt?: string;
   updatedAt?: string;
-  stockQuantity?: number;
-  discountPrice?: number;
   currency?: string;
   rating?: number;
-  brand?: string;
-  brand_en?: string;
-  brand_ar?: string;
-  sku?: string;
-  isActive?: boolean;
   tags?: string[];
   weight?: number;
   dimensions?: {
@@ -49,60 +47,55 @@ export interface Product {
 }
 
 /**
- * Supabase Add_Products table row type
+ * Supabase accessories table row type
  * Based on actual database structure
  */
-export interface ProductRow {
+export interface AccessoryRow {
   id: number;
   created_at: string;
   name_en: string;
   name_ar: string;
   description_en: string;
   description_ar: string;
-  category_ar?: string;
-  category_en?: string;
-  brand_ar?: string;
-  brand_en?: string;
   price: number;
-  discount?: number;
-  stock?: number;
+  type?: string;
+  brand?: string;
   sku?: string;
-  images_url?: string;
-  specs_en?: Record<string, string>;
-  specs_ar?: Record<string, string>;
-  is_active?: boolean;
-  slug?: string;
+  status?: string;
+  discount?: number;
+  stock_quantity?: number;
+  compatible_devices?: string[];
+  image_url?: string;
   updated_at?: string;
-  weight?: number;
-  dimensions?: any;
   currency?: string;
   // Note: rating is not stored in database, it's calculated from reviews
   tags?: string[];
+  weight?: number;
+  dimensions?: any;
 }
 
 /**
- * Product query parameters
+ * Accessory query parameters
  */
-export interface ProductQueryParams {
+export interface AccessoryQueryParams {
   page?: number;
   limit?: number;
-  category?: string;
+  type?: string;
   brand?: string;
   search?: string;
   minPrice?: number;
   maxPrice?: number;
-  rating?: number;
-  availability?: "in_stock" | "out_of_stock" | "all";
-  tags?: string[];
-  sortBy?: "name" | "price" | "rating" | "created_at" | "popularity";
+  status?: string;
+  compatibleDevices?: string[];
+  sortBy?: "name" | "price" | "rating" | "created_at" | "type" | "brand" | "popularity";
   sortOrder?: "asc" | "desc";
 }
 
 /**
- * Paginated products response
+ * Paginated accessories response
  */
-export interface ProductsResponse {
-  products: Product[];
+export interface AccessoriesResponse {
+  accessories: Accessory[];
   pagination: {
     currentPage: number;
     totalPages: number;

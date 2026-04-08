@@ -1,21 +1,36 @@
-import { ProductRepository } from '@/lib/repositories/product.repository';
-import { ReviewsRepository } from '@/lib/repositories/reviews.repository';
-import { Product, ProductQueryParams, ProductsResponse } from '@/types/product';
+import { ProductRepository } from "@/lib/repositories/product.repository";
+import { ReviewsRepository } from "@/lib/repositories/reviews.repository";
+import { Product, ProductQueryParams, ProductsResponse, ProductRow } from "@/types/product";
+import { productAdapter } from "@/lib/adapters/product.adapter";
 
 export class ProductsService {
+  // Business logic: Get product by slug (without reviews)
+  static async getProductBySlug(slug: string): Promise<Product | null> {
+    const product = await ProductRepository.getProductBySlug(slug);
+    if (!product) return null;
+
+    return productAdapter.mapProductRow(product as any);
+  }
+
   // Business logic: Get product with all related data
   static async getProductDetails(slug: string): Promise<Product | null> {
     const [product, reviews] = await Promise.all([
       ProductRepository.getProductBySlug(slug),
-      ReviewsRepository.getProductAverageRating(slug)
+      ReviewsRepository.getProductAverageRating(slug),
     ]);
 
     if (!product) return null;
 
-    return {
+    const productWithRating = {
       ...product,
-      rating: reviews.average
+      rating: reviews.average,
     };
+    return productAdapter.mapProductRow(productWithRating as any);
+  }
+
+  // Business logic: Get products with filtering
+  static async getProducts(params: ProductQueryParams = {}): Promise<ProductsResponse> {
+    return ProductRepository.getAllProducts(params);
   }
 
   // Business logic: Get publicly visible products only
@@ -24,7 +39,7 @@ export class ProductsService {
     const filteredParams = {
       ...params,
       isActive: true,
-      stock_gt: 0
+      stock_gt: 0,
     } as ProductQueryParams;
 
     return ProductRepository.getAllProducts(filteredParams);
@@ -34,25 +49,29 @@ export class ProductsService {
   static async createProduct(productData: Partial<Product>): Promise<Product> {
     // Business rule: Generate slug if not provided
     if (!productData.slug) {
-      productData.slug = this.generateSlug(productData.name || '');
+      productData.slug = this.generateSlug(productData.name || "");
     }
 
     // Business rule: Set default currency
     if (!productData.currency) {
-      productData.currency = 'USD';
+      productData.currency = "USD";
     }
 
     // Business rule: Ensure required fields
     if (!productData.name || !productData.price) {
-      throw new Error('Product name and price are required');
+      throw new Error("Product name and price are required");
     }
 
-    return ProductRepository.createProduct(productData);
+    // Convert Product to ProductRow using adapter
+    const productRow = productAdapter.mapProductToRow(productData);
+    return ProductRepository.createProduct(productRow);
   }
 
   // Business logic: Update product
   static async updateProduct(id: number, updates: Partial<Product>): Promise<Product> {
-    return ProductRepository.updateProduct(id, updates);
+    // Convert Product to ProductRow using adapter
+    const productRow = productAdapter.mapProductToRow(updates);
+    return ProductRepository.updateProduct(id, productRow);
   }
 
   // Business logic: Delete product
@@ -81,7 +100,11 @@ export class ProductsService {
   }
 
   // Business logic: Get related products
-  static async getRelatedProducts(category: string, excludeSlug: string, limit: number = 8): Promise<Product[]> {
+  static async getRelatedProducts(
+    category: string,
+    excludeSlug: string,
+    limit: number = 8,
+  ): Promise<Product[]> {
     return ProductRepository.getRelatedProducts(category, excludeSlug, limit);
   }
 
@@ -89,9 +112,9 @@ export class ProductsService {
   private static generateSlug(name: string): string {
     return name
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
       .trim();
   }
 
@@ -100,7 +123,7 @@ export class ProductsService {
     const params: ProductQueryParams = {} as ProductQueryParams;
 
     // Business rule: Admins see all products, others see only active
-    if (userRole !== 'admin') {
+    if (userRole !== "admin") {
       (params as any).isActive = true;
     }
 
@@ -112,7 +135,7 @@ export class ProductsService {
     if (product.discountPrice) {
       return product.discountPrice;
     }
-    
+
     return product.price;
   }
 }

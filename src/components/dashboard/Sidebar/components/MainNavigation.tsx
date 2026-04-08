@@ -39,6 +39,11 @@ export default function MainNavigation({ isCollapsed }: MainNavigationProps) {
       label: dictionary.addProduct,
     },
     {
+      href: "/dashboard/add-accessories",
+      icon: <Plus className="w-6 h-6" />,
+      label: dictionary.addAccessories,
+    },
+    {
       href: "/dashboard/inventory",
       icon: <Package2 className="w-6 h-6" />,
       label: dictionary.inventory,

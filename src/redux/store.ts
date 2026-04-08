@@ -7,6 +7,7 @@ import productsReducer from "@/redux/modules/products/slice";
 import { productsApiSlice } from "@/redux/modules/products/apiSlice";
 import accessoriesReducer from "@/redux/modules/accessories/slice";
 import { accessoriesApiSlice } from "@/redux/modules/accessories/apiSlice";
+import addAccessoriesReducer from "@/redux/modules/addAccessories/slice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     addProduct: addProductReducer,
     products: productsReducer,
     accessories: accessoriesReducer,
+    addAccessories: addAccessoriesReducer,
     // Add RTK Query API reducers
     [productsApiSlice.reducerPath]: productsApiSlice.reducer,
     [accessoriesApiSlice.reducerPath]: accessoriesApiSlice.reducer,

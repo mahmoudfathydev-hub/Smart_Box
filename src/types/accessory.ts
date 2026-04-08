@@ -23,8 +23,11 @@ export interface Accessory {
   slug: string;
   type?: string;
   brand?: string;
+  brand_en?: string;
+  brand_ar?: string;
   sku?: string;
   status?: string;
+  is_active?: boolean;
   discount?: number;
   discountPrice?: number;
   stock_quantity?: number;

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getDefaultCountry } from "@/lib/data/countries";
 
 export const signUpSchema = z
   .object({
@@ -8,10 +9,11 @@ export const signUpSchema = z
       .string()
       .min(1, "Password is required")
       .min(8, "Password must be at least 8 characters"),
-    phone: z
+    number: z
       .string()
       .min(1, "Phone number is required")
-      .min(10, "Phone number must be at least 10 digits"),
+      .min(8, "Phone number must be at least 8 digits"),
+    countryCode: z.string().min(1, "Country code is required"),
     country: z
       .string()
       .min(1, "Country is required")
@@ -45,7 +47,7 @@ export const validateAccessKey = (role: "admin" | "employee", accessKey: string)
 
 export const validatePhoneNumber = (phone: string): boolean => {
   const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  return phoneRegex.test(phone) && phone.replace(/\D/g, "").length >= 10;
+  return phoneRegex.test(phone) && phone.replace(/\D/g, "").length >= 11;
 };
 
 export const validateEmail = (email: string): boolean => {

@@ -14,6 +14,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Controller } from "react-hook-form";
 import { SignUpFormData } from "@/lib/validation/signUpValidation";
+import { countries, Country, getFlagEmoji } from "@/lib/data/countries";
 
 interface SignUpFormProps {
   register: any;
@@ -29,7 +30,9 @@ interface SignUpFormProps {
   error: string | null;
   phoneError: string;
   handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCountryCodeChange: (countryCode: string) => void;
   formatPhoneNumber: (phone: string) => string;
+  selectedCountryCode: string;
   t: any;
 }
 
@@ -47,7 +50,9 @@ export default function SignUpForm({
   error,
   phoneError,
   handlePhoneChange,
+  handleCountryCodeChange,
   formatPhoneNumber,
+  selectedCountryCode,
   t,
 }: SignUpFormProps) {
   const selectedRole = watch("role");
@@ -72,9 +77,7 @@ export default function SignUpForm({
             {...register("name")}
           />
         </div>
-        {errors.name && (
-          <p className="text-sm text-destructive">{t.errors.nameRequired}</p>
-        )}
+        {errors.name && <p className="text-sm text-destructive">{t.errors.nameRequired}</p>}
       </div>
 
       <div className="space-y-2">
@@ -89,9 +92,7 @@ export default function SignUpForm({
             {...register("email")}
           />
         </div>
-        {errors.email && (
-          <p className="text-sm text-destructive">{t.errors.emailRequired}</p>
-        )}
+        {errors.email && <p className="text-sm text-destructive">{t.errors.emailRequired}</p>}
       </div>
 
       <div className="space-y-2">
@@ -113,27 +114,56 @@ export default function SignUpForm({
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        {errors.password && (
-          <p className="text-sm text-destructive">{t.errors.passwordRequired}</p>
-        )}
+        {errors.password && <p className="text-sm text-destructive">{t.errors.passwordRequired}</p>}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">{t.phoneLabel}</Label>
-        <div className="relative">
-          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 h-4 w-4" />
-          <Input
-            id="phone"
-            type="tel"
-            placeholder={t.phonePlaceholder}
-            className="pl-10"
-            {...register("phone")}
-            onChange={handlePhoneChange}
-            onBlur={(e) => {
-              const formatted = formatPhoneNumber(e.target.value);
-              setValue("phone", formatted);
-            }}
-          />
+        <Label htmlFor="number">{t.phoneLabel}</Label>
+        <div className="flex gap-2">
+          <div className="relative w-32">
+            <Controller
+              name="countryCode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleCountryCodeChange(value);
+                  }}
+                  value={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">{country.name}</span>
+                          <span className="text-sm text-neutral-500">{country.dialCode}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+          <div className="relative flex-1">
+            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 h-4 w-4" />
+            <Input
+              id="number"
+              type="tel"
+              placeholder={t.phonePlaceholder}
+              className="pl-10"
+              {...register("number")}
+              onChange={handlePhoneChange}
+              onBlur={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                setValue("number", formatted);
+              }}
+            />
+          </div>
         </div>
         {phoneError && <p className="text-sm text-destructive">{phoneError}</p>}
       </div>
@@ -150,9 +180,7 @@ export default function SignUpForm({
             {...register("country")}
           />
         </div>
-        {errors.country && (
-          <p className="text-sm text-destructive">{t.errors.countryRequired}</p>
-        )}
+        {errors.country && <p className="text-sm text-destructive">{t.errors.countryRequired}</p>}
       </div>
 
       <div className="space-y-2">
@@ -173,9 +201,7 @@ export default function SignUpForm({
             </Select>
           )}
         />
-        {errors.role && (
-          <p className="text-sm text-destructive">{t.errors.roleRequired}</p>
-        )}
+        {errors.role && <p className="text-sm text-destructive">{t.errors.roleRequired}</p>}
       </div>
 
       {(selectedRole === "admin" || selectedRole === "employee") && (

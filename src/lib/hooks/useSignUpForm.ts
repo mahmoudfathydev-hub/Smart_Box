@@ -5,6 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useAuth } from "./useAuth";
 import { signUpSchema, SignUpFormData, validateAccessKey } from "@/lib/validation/signUpValidation";
+import {
+  getDefaultCountry,
+  getCountryByDialCode,
+  Country,
+  getCountryByCode,
+} from "@/lib/data/countries";
 
 export const useSignUpForm = () => {
   const router = useRouter();
@@ -23,10 +29,12 @@ export const useSignUpForm = () => {
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       role: "user",
+      countryCode: getDefaultCountry().code,
     },
   });
 
   const selectedRole = watch("role");
+  const selectedCountryCode = watch("countryCode");
 
   // Redirect if already authenticated
   if (isAuthenticated && user) {
@@ -37,9 +45,29 @@ export const useSignUpForm = () => {
     }
   }
 
-  const validatePhone = (phone: string) => {
+  const validatePhone = (number: string, countryCode?: string) => {
     try {
-      const phoneNumber = parsePhoneNumberFromString(phone);
+      const selectedCode = countryCode || selectedCountryCode;
+      const country = getCountryByCode(selectedCode);
+
+      if (!country) {
+        setPhoneError("Please select a valid country");
+        return false;
+      }
+
+      const dialCode = country.dialCode;
+      const cleanNumber = number.replace(/\D/g, "");
+
+      // For Egyptian numbers, handle common case where users enter without the leading 0
+      let phoneNumberToTest = cleanNumber;
+      if (dialCode === "+20" && cleanNumber.startsWith("0")) {
+        phoneNumberToTest = cleanNumber.substring(1);
+      }
+
+      const fullPhoneNumber = `${dialCode}${phoneNumberToTest}`;
+
+      const phoneNumber = parsePhoneNumberFromString(fullPhoneNumber);
+
       if (phoneNumber && phoneNumber.isValid()) {
         setPhoneError("");
         return true;
@@ -53,9 +81,25 @@ export const useSignUpForm = () => {
     }
   };
 
-  const formatPhoneNumber = (phone: string) => {
+  const formatPhoneNumber = (phone: string, countryCode?: string) => {
     try {
-      const phoneNumber = parsePhoneNumberFromString(phone);
+      const selectedCode = countryCode || selectedCountryCode;
+      const country = getCountryByCode(selectedCode);
+      if (!country) {
+        return phone;
+      }
+
+      const dialCode = country.dialCode;
+      const cleanPhone = phone.replace(/\D/g, "");
+
+      let phoneNumberToTest = cleanPhone;
+      if (dialCode === "+20" && cleanPhone.startsWith("0")) {
+        phoneNumberToTest = cleanPhone.substring(1);
+      }
+
+      const fullPhoneNumber = `${dialCode}${phoneNumberToTest}`;
+      const phoneNumber = parsePhoneNumberFromString(fullPhoneNumber);
+
       if (phoneNumber) {
         return phoneNumber.formatInternational();
       }
@@ -67,7 +111,7 @@ export const useSignUpForm = () => {
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setValue("phone", value);
+    setValue("number", value);
 
     if (value) {
       validatePhone(value);
@@ -76,10 +120,18 @@ export const useSignUpForm = () => {
     }
   };
 
+  const handleCountryCodeChange = (countryCode: string) => {
+    setValue("countryCode", countryCode);
+    const currentNumber = watch("number");
+    if (currentNumber) {
+      validatePhone(currentNumber, countryCode);
+    }
+  };
+
   const onSubmit = async (data: SignUpFormData) => {
     try {
       // Validate phone number before submission
-      if (!validatePhone(data.phone)) {
+      if (!validatePhone(data.number, data.countryCode)) {
         return;
       }
 
@@ -93,7 +145,7 @@ export const useSignUpForm = () => {
 
       const result = await signUp({
         ...data,
-        number: data.phone, // Map phone to number for the API
+        number: data.number,
       });
 
       if (result.meta.requestStatus === "fulfilled") {
@@ -123,7 +175,9 @@ export const useSignUpForm = () => {
     error,
     phoneError,
     handlePhoneChange,
+    handleCountryCodeChange,
     formatPhoneNumber,
+    selectedCountryCode,
     selectedRole,
   };
 };

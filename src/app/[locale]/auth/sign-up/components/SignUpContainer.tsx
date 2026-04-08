@@ -11,7 +11,7 @@ export default function SignUpContainer() {
   const params = useParams();
   const locale = (params.locale as "en" | "ar") || "en";
   const t = signUpTranslations[locale];
-  
+
   const {
     register,
     handleSubmit,
@@ -26,7 +26,9 @@ export default function SignUpContainer() {
     error,
     phoneError,
     handlePhoneChange,
+    handleCountryCodeChange,
     formatPhoneNumber,
+    selectedCountryCode,
   } = useSignUpForm();
 
   return (
@@ -45,14 +47,13 @@ export default function SignUpContainer() {
         error={error}
         phoneError={phoneError}
         handlePhoneChange={handlePhoneChange}
+        handleCountryCodeChange={handleCountryCodeChange}
         formatPhoneNumber={formatPhoneNumber}
+        selectedCountryCode={selectedCountryCode}
         t={t}
       />
       <div className="mt-6">
-        <SignUpLinks
-          hasAccount={t.hasAccount}
-          signInLink={t.signInLink}
-        />
+        <SignUpLinks hasAccount={t.hasAccount} signInLink={t.signInLink} />
       </div>
     </SignUpCard>
   );

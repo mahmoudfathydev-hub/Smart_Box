@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@/services/supabaseService';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "@/services/supabaseService";
 
 // Types
 export interface AuthState {
@@ -15,8 +15,9 @@ export interface SignUpData {
   password: string;
   number: string;
   country: string;
+  countryCode: string;
   image_url?: string;
-  role: 'user' | 'admin' | 'employee';
+  role: "user" | "admin" | "employee";
   accessKey?: string;
 }
 
@@ -27,13 +28,13 @@ export interface SignInData {
 
 // Async thunks
 export const signUp = createAsyncThunk(
-  'auth/signUp',
+  "auth/signUp",
   async (userData: SignUpData, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -41,24 +42,24 @@ export const signUp = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.error || 'Sign up failed');
+        return rejectWithValue(data.error || "Sign up failed");
       }
 
       return data.user;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
-  }
+  },
 );
 
 export const signIn = createAsyncThunk(
-  'auth/signIn',
+  "auth/signIn",
   async (credentials: SignInData, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(credentials),
       });
@@ -66,27 +67,24 @@ export const signIn = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.error || 'Sign in failed');
+        return rejectWithValue(data.error || "Sign in failed");
       }
 
       return data.user;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
-  }
+  },
 );
 
-export const signOut = createAsyncThunk(
-  'auth/signOut',
-  async (_, { rejectWithValue }) => {
-    try {
-      // You can add logout API call here if needed
-      return null;
-    } catch (error) {
-      return rejectWithValue('Logout failed');
-    }
+export const signOut = createAsyncThunk("auth/signOut", async (_, { rejectWithValue }) => {
+  try {
+    // You can add logout API call here if needed
+    return null;
+  } catch (error) {
+    return rejectWithValue("Logout failed");
   }
-);
+});
 
 // Initial state
 const initialState: AuthState = {
@@ -98,7 +96,7 @@ const initialState: AuthState = {
 
 // Auth slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     clearError: (state) => {

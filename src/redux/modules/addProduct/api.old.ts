@@ -1,4 +1,10 @@
+import { createClient } from "@supabase/supabase-js";
 import { Product } from "./types";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
 export const uploadImageToCloudinary = async (
   file: File,
@@ -24,27 +30,22 @@ export const uploadImageToCloudinary = async (
 export const createProductInSupabase = async (
   product: Omit<Product, "id" | "created_at">,
 ) => {
-  const response = await fetch('/api/products/create', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(product)
-  });
+  const { data, error } = await supabase
+    .from("Add_Products")
+    .insert(product)
+    .select()
+    .single();
 
-  if (!response.ok) {
-    throw new Error('Failed to create product');
-  }
-
-  return response.json();
+  if (error) throw error;
+  return data;
 };
 
 export const fetchProductsFromSupabase = async (): Promise<Product[]> => {
-  const response = await fetch('/api/products/list');
-  if (!response.ok) {
-    throw new Error('Failed to fetch products');
-  }
-  
-  const data = await response.json();
+  const { data, error } = await supabase
+    .from("Add_Products")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
   return data || [];
 };

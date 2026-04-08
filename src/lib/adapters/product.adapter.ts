@@ -49,28 +49,29 @@ export const productAdapter = {
     const discountPrice =
       row.discount && row.discount > 0 ? row.price - (row.price * row.discount) / 100 : undefined;
 
-    // Get localized name and description (preserve both for UI)
-    const name_en = row.name_en || "";
-    const name_ar = row.name_ar || "";
-    const description_en = row.description_en || "";
-    const description_ar = row.description_ar || "";
-    const category_en = row.category_en || "";
-    const category_ar = row.category_ar || "";
-    const brand_en = row.brand_en || "";
-    const brand_ar = row.brand_ar || "";
+    // Get localized name and description (preserve undefined for fallback logic)
+    const name_en = row.name_en || undefined;
+    const name_ar = row.name_ar || undefined;
+    const description_en = row.description_en || undefined;
+    const description_ar = row.description_ar || undefined;
+    const category_en = row.category_en || undefined;
+    const category_ar = row.category_ar || undefined;
+    const brand_en = row.brand_en || undefined;
+    const brand_ar = row.brand_ar || undefined;
 
     // Generate slug from name_en (as requested)
-    const slug =
-      name_en
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .trim() || `product-${row.id}`;
+    const slug = name_en
+      ? name_en
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .trim()
+      : `product-${row.id}`;
 
     return {
       id: row.id.toString(),
-      name: name_en,
+      name: name_en || `Product ${row.id}`,
       name_en,
       name_ar,
       description: description_en,

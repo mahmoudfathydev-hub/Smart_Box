@@ -41,12 +41,14 @@ export default function ProductCard({
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
 
-  const imageUrl = product.images[0]?.url || "/images/product-placeholder.jpg";
+  const imageUrl = product.images[0]?.url || "/images/product-placeholder.svg";
 
   // Get localized content with character limits
   const getName = () => {
     const name =
-      locale === Language.AR && product.name_ar ? product.name_ar : product.name_en || product.name;
+      locale === Language.AR && product.name_ar
+        ? product.name_ar
+        : product.name_en || product.name || "Unnamed Product";
     return name.length > 30 ? name.substring(0, 25) + "..." : name;
   };
 

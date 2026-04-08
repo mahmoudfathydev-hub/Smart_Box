@@ -28,9 +28,7 @@ export const ratingSchema = z.object({
 });
 
 export const sortingSchema = z.object({
-  sortBy: z
-    .enum(["name", "price", "rating", "created_at", "popularity"])
-    .optional(),
+  sortBy: z.enum(["name", "price", "rating", "created_at", "popularity"]).optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
@@ -60,10 +58,7 @@ export const productsQuerySchema = z.intersection(
     z.intersection(
       z.intersection(
         z.intersection(
-          z.intersection(
-            z.intersection(paginationSchema, searchSchema),
-            categorySchema,
-          ),
+          z.intersection(z.intersection(paginationSchema, searchSchema), categorySchema),
           brandSchema,
         ),
         priceRangeSchema,
@@ -93,7 +88,16 @@ export const productCreateSchema = z.object({
   currency: z.string().length(3).default("USD"),
   rating: z.number().min(0).max(5).default(0),
   stockQuantity: z.number().int().min(0),
-  images: z.array(z.string().url()).default([]),
+  images: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        url: z.string().url(),
+        alt: z.string(),
+        order: z.number().int().min(0),
+      }),
+    )
+    .default([]),
   specs: z
     .array(
       z.object({
@@ -117,6 +121,67 @@ export const productCreateSchema = z.object({
 
 // Product update schema (all fields optional)
 export const productUpdateSchema = productCreateSchema.partial();
+
+// User validation schemas
+export const userCreateSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().email(),
+  password: z.string().min(8).max(100),
+  number: z.string().min(10).max(20),
+  country: z.string().min(2).max(50),
+  countryCode: z.string().min(2).max(5),
+  role: z.enum(["user", "admin", "employee"]),
+  accessKey: z.string().optional(),
+});
+
+export const userLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+// Review validation schemas
+export const reviewSubmitSchema = z.object({
+  userName: z.string().trim().min(2).max(50),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().trim().min(10).max(1000),
+});
+
+// Product query schema for API routes
+export const productQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(12),
+  search: z.string().trim().max(100).optional(),
+  category: z.string().trim().max(50).optional(),
+  brand: z.string().trim().max(50).optional(),
+  minPrice: z.coerce.number().min(0).optional(),
+  maxPrice: z.coerce.number().min(0).optional(),
+  rating: z.coerce.number().min(0).max(5).optional(),
+  availability: z.enum(["in_stock", "out_of_stock", "all"]).optional(),
+  tags: z.array(z.string().trim().max(30)).optional(),
+  sortBy: z.enum(["name", "price", "rating", "created_at"]).optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
+});
+
+// Validation helpers
+export const validateProductCreate = (data: unknown) => {
+  return productCreateSchema.parse(data);
+};
+
+export const validateProductQuery = (data: unknown) => {
+  return productQuerySchema.parse(data);
+};
+
+export const validateUserCreate = (data: unknown) => {
+  return userCreateSchema.parse(data);
+};
+
+export const validateUserLogin = (data: unknown) => {
+  return userLoginSchema.parse(data);
+};
+
+export const validateReviewSubmit = (data: unknown) => {
+  return reviewSubmitSchema.parse(data);
+};
 
 // User input sanitization helpers
 export const sanitizeString = (input: unknown): string | undefined => {
@@ -171,9 +236,7 @@ export const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   DATABASE_URL: z.string().optional(),
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   NEXT_PUBLIC_ENABLE_ERROR_LOGGING: z.enum(["true", "false"]).optional(),
   NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
 });

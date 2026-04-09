@@ -1,7 +1,6 @@
 import { AccessoriesRepository } from "@/lib/repositories/accessories.repository";
 import { accessoryAdapter } from "@/lib/adapters/accessory.adapter";
-import { AccessoryQueryParams, AccessoriesResponse } from "@/types/accessory";
-import { Product } from "@/types/product";
+import { AccessoryQueryParams, AccessoriesResponse, Accessory } from "@/types/accessory";
 import { z } from "zod";
 import { accessoryCreateSchema, accessoryUpdateSchema } from "@/lib/validation/schemas";
 
@@ -80,7 +79,7 @@ export class AccessoriesService {
   /**
    * Get single accessory by slug
    */
-  static async getAccessoryBySlug(slug: string): Promise<Product | null> {
+  static async getAccessoryBySlug(slug: string): Promise<Accessory | null> {
     const accessory = await AccessoriesRepository.getAccessoryBySlug(slug);
 
     if (!accessory) {
@@ -98,7 +97,7 @@ export class AccessoriesService {
   /**
    * Get accessory by ID (internal use)
    */
-  static async getAccessoryById(id: string): Promise<Product | null> {
+  static async getAccessoryById(id: string): Promise<Accessory | null> {
     const numericId = parseInt(id);
     if (isNaN(numericId)) {
       throw new Error("Invalid accessory ID");
@@ -112,14 +111,14 @@ export class AccessoriesService {
   /**
    * Get featured accessories
    */
-  static async getFeaturedAccessories(limit: number = 8): Promise<Product[]> {
+  static async getFeaturedAccessories(limit: number = 8): Promise<Accessory[]> {
     return AccessoriesRepository.getFeaturedAccessories(limit);
   }
 
   /**
    * Get accessories by type
    */
-  static async getAccessoriesByType(type: string, limit: number = 12): Promise<Product[]> {
+  static async getAccessoriesByType(type: string, limit: number = 12): Promise<Accessory[]> {
     // Business logic: Validate type
     const validTypes = ["phone", "laptop", "tablet", "watch", "headphones", "other"];
     if (!validTypes.includes(type)) {
@@ -136,14 +135,14 @@ export class AccessoriesService {
     type: string,
     excludeSlug: string,
     limit: number = 8,
-  ): Promise<Product[]> {
+  ): Promise<Accessory[]> {
     return AccessoriesRepository.getRelatedAccessories(type, excludeSlug, limit);
   }
 
   /**
    * Search accessories
    */
-  static async searchAccessories(query: string, limit: number = 12): Promise<Product[]> {
+  static async searchAccessories(query: string, limit: number = 12): Promise<Accessory[]> {
     // Business logic: Validate search query
     if (!query || query.trim().length < 2) {
       throw new Error("Search query must be at least 2 characters");
@@ -155,14 +154,14 @@ export class AccessoriesService {
   /**
    * Get accessories on sale
    */
-  static async getAccessoriesOnSale(limit: number = 12): Promise<Product[]> {
+  static async getAccessoriesOnSale(limit: number = 12): Promise<Accessory[]> {
     return AccessoriesRepository.getAccessoriesOnSale(limit);
   }
 
   /**
    * Get accessories by brand
    */
-  static async getAccessoriesByBrand(brand: string, limit: number = 12): Promise<Product[]> {
+  static async getAccessoriesByBrand(brand: string, limit: number = 12): Promise<Accessory[]> {
     // Business logic: Validate brand
     if (!brand || brand.trim().length < 2) {
       throw new Error("Brand name must be at least 2 characters");
@@ -174,7 +173,7 @@ export class AccessoriesService {
   /**
    * Create new accessory with business validation
    */
-  static async createAccessory(data: CreateAccessoryDTO): Promise<Product> {
+  static async createAccessory(data: CreateAccessoryDTO): Promise<Accessory> {
     // Business validation using Zod schema
     const validatedData = accessoryCreateSchema.parse(data);
 
@@ -212,7 +211,7 @@ export class AccessoriesService {
   /**
    * Update accessory with business validation
    */
-  static async updateAccessory(id: string, data: UpdateAccessoryDTO): Promise<Product> {
+  static async updateAccessory(id: string, data: UpdateAccessoryDTO): Promise<Accessory> {
     const numericId = parseInt(id);
     if (isNaN(numericId)) {
       throw new Error("Invalid accessory ID");
@@ -280,7 +279,7 @@ export class AccessoriesService {
   /**
    * Business logic: Calculate discount price
    */
-  static calculateDiscountPrice(accessory: Product): number {
+  static calculateDiscountPrice(accessory: Accessory): number {
     if (accessory.discountPrice) {
       return accessory.discountPrice;
     }
@@ -290,15 +289,15 @@ export class AccessoriesService {
   /**
    * Business logic: Check if accessory is in stock
    */
-  static isInStock(accessory: Product): boolean {
-    return (accessory.stockQuantity ?? 0) > 0;
+  static isInStock(accessory: Accessory): boolean {
+    return (accessory.stock_quantity ?? 0) > 0;
   }
 
   /**
    * Business logic: Get accessory availability status
    */
-  static getAvailabilityStatus(accessory: Product): "in_stock" | "out_of_stock" | "limited" {
-    const stock = accessory.stockQuantity ?? 0;
+  static getAvailabilityStatus(accessory: Accessory): "in_stock" | "out_of_stock" | "limited" {
+    const stock = accessory.stock_quantity ?? 0;
     if (stock === 0) {
       return "out_of_stock";
     }

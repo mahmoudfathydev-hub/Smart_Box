@@ -230,6 +230,64 @@ export const validateQuery = <T>(schema: z.ZodSchema<T>, query: unknown) => {
   }
 };
 
+// Accessory validation schemas
+export const accessoryCreateSchema = z.object({
+  name_en: z.string().trim().min(1).max(200),
+  name_ar: z.string().trim().min(1).max(200),
+  description_en: z.string().trim().min(1).max(2000),
+  description_ar: z.string().trim().min(1).max(2000),
+  type: z.string().trim().min(1).max(50),
+  brand: z.string().trim().min(1).max(100),
+  price: z.number().min(0).multipleOf(0.01), // 2 decimal places
+  stock_quantity: z.number().int().min(0).max(999999).optional(),
+  image_url: z.string().url().optional(),
+  compatible_devices: z.array(z.string().trim().max(100)).optional(),
+  status: z.enum(["active", "inactive"]).default("active"),
+  discount: z.number().min(0).max(100).optional(),
+  sku: z.string().trim().max(50).optional(),
+  currency: z.string().length(3).default("USD"),
+  tags: z.array(z.string().trim().max(30)).optional(),
+  weight: z.number().min(0).optional(),
+  dimensions: z
+    .object({
+      length: z.number().min(0),
+      width: z.number().min(0),
+      height: z.number().min(0),
+    })
+    .optional(),
+});
+
+// Accessory update schema (all fields optional)
+export const accessoryUpdateSchema = accessoryCreateSchema.partial();
+
+// Accessory query schema for API routes
+export const accessoryQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(12),
+  search: z.string().trim().max(100).optional(),
+  type: z.string().trim().max(50).optional(),
+  brand: z.string().trim().max(50).optional(),
+  minPrice: z.coerce.number().min(0).optional(),
+  maxPrice: z.coerce.number().min(0).optional(),
+  status: z.enum(["active", "inactive", "all"]).optional(),
+  compatibleDevices: z.array(z.string().trim().max(100)).optional(),
+  sortBy: z.enum(["name", "price", "created_at", "type", "brand"]).optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
+});
+
+// Validation helpers for accessories
+export const validateAccessoryCreate = (data: unknown) => {
+  return accessoryCreateSchema.parse(data);
+};
+
+export const validateAccessoryUpdate = (data: unknown) => {
+  return accessoryUpdateSchema.parse(data);
+};
+
+export const validateAccessoryQuery = (data: unknown) => {
+  return accessoryQuerySchema.parse(data);
+};
+
 // Environment variable validation
 export const envSchema = z.object({
   NEXT_PUBLIC_API_URL: z.string().url().optional(),

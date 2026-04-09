@@ -194,3 +194,19 @@ src/
          └── EmployeesPage/
               ├── employees.en.ts
               └── employees.ar.ts
+
+
+
+
+Follow strict layering rules: 
+              Supabase 
+                    ↓
+              Repository Layer 
+                    ↓
+              Service Layer 
+                    ↓
+              Server Actions / API Routes 
+                    ↓
+              Redux 
+                    ↓
+              UI Components
